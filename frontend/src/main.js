@@ -1,5 +1,10 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
+import router from './router'
+import Default from './layout/wrapper/index.vue'
+const app = createApp(App)
 
-createApp(App).mount('#app')
+app.use(router)
+app.component("default-layout", Default);
+
+app.mount("#app")
