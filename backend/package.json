@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:project": "nodemon app.js"
+    "start:dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "nodemon": "^3.1.9",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.20.2",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "twilio": "^5.5.1"
   }
 }
