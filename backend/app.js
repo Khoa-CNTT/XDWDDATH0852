@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import setupSwagger from './swagger/swagger.js'
 import dotenv from 'dotenv'
+import { syncDB } from './models/index.js'
 
 // Setup Express App
 const app = express()
@@ -25,7 +26,7 @@ setupSwagger(app)
 
 const startServer = async () => {
     try {
-        // await syncDB()
+        await syncDB()
         console.log("✅ Database connected & synced!")
 
         app.get("/", (req, res) => {
