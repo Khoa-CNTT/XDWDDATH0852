@@ -1,16 +1,14 @@
 import { body, validationResult } from 'express-validator'
 
 const validateRegister = [
-    body("fullName")
+    body('fullname')
         .trim()
-        .notEmpty().withMessage("Họ và tên không được để trống")
-        .matches(/^[A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƠĂÊÔơăêôƯư\s]+$/u)
-        .withMessage("Họ và tên phải nhập chữ có dấu"),
+        .notEmpty().withMessage('Họ và tên không được để trống')
+        .matches(/^[\p{L}\s]+$/u).withMessage('Họ và tên chỉ được chứa chữ và khoảng trắng (có dấu)'),
 
-    // body("dob")
-    //     .notEmpty().withMessage("Ngày sinh không được để trống")
-    //     .matches(/^\d{2}\/\d{2}\/\d{4}$/)
-    //     .withMessage("Ngày sinh phải có định dạng DD/MM/YYYY"),
+    body('phone_number')
+        .notEmpty().withMessage('Số điện thoại không được để trống')
+        .matches(/^0[0-9]{9}$/).withMessage('Số điện thoại không đủ 9 số'),
 
     body("email")
         .notEmpty().withMessage("Email không được để trống")
@@ -31,4 +29,12 @@ const validateRegister = [
     },
 ];
 
-export default { validateRegister };
+const validateLogin = [
+    body('phone').matches(/^0[0-9]{9}$/).withMessage('Số điện thoại không hợp lệ'),
+    body('password').isLength({ min: 8 }).withMessage('Mật khẩu phải có ít nhất 8 ký tự')
+]
+
+export default { 
+    validateRegister, 
+    validateLogin, 
+};

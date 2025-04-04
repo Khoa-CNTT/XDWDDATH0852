@@ -25,12 +25,11 @@ const sendOTP = async (req, res) => {
         [phone_number, otp, expires_at, otp, expires_at]
     );
 
-    // (Gửi OTP qua SMS - tùy vào hệ thống của bạn)
-
+    // (Gửi OTP qua SMS)
     return res.status(200).json({ message: "OTP đã được gửi!", phone_number });
 };
 
-const registerUserService = async (fullname, email, password) => {
+const registerUserService = async (fullname, email, password, phone_number) => {
     const queryCheckUser = 'SELECT * FROM users WHERE email = ?';
     const [results] = await database.query(queryCheckUser, [email]);
     if (results.length > 0) {
@@ -41,16 +40,25 @@ const registerUserService = async (fullname, email, password) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Chèn user mới vào database
-    const sql = 'INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)';
-    const [result] = await database.query(sql, [fullname, email, hashedPassword]);
+    const sql = 'INSERT INTO users (fullname, email, password, phone_number) VALUES (?, ?, ?, ?)';
+    const [result] = await database.query(sql, [fullname, email, hashedPassword, phone_number]);
 
     // Trả về kết quả nếu đăng ký thành công
     return { success: true, userId: result.insertId };
 }
 
-const loginUserService = () => { }
-
-
+const loginUserService = async (phone_number, password) => {
+    const sql = 'SELECT * FROM users WHERE phone_number = ?';
+    const [results] = await database.query(sql, [phone_number]);
+    if (results.length === 0) {
+        return { success: false };
+    }
+    const isMatch = await bcrypt.compare(password, results[0].password);
+    if (!isMatch) {
+        return { success: false };
+    }
+    return { success: true, userId: results[0].id };
+}
 
 
 export default {
