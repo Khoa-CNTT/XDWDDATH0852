@@ -2,7 +2,7 @@
 
 > Một hệ thống đặt đồ ăn thông minh tích hợp AI tư vấn món ăn và thanh toán qua VNPay.
 
-![Banner]([https://imgur.com/a/hhhi3YJ.png](https://i.pinimg.com/736x/d0/34/e4/d034e42640323f427f5cc76c46762775.jpg))
+![Banner](assets/banner.png)
 
 ---
 
