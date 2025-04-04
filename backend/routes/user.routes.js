@@ -34,18 +34,44 @@ router.get('/all', UserController.getAllUserController)
  *             properties:
  *               fullname:
  *                 type: string
- *                 example: "John Doe"
+ *                 example: "Nguyễn Văn An"
  *               password:
  *                 type: string
  *                 example: user12345
  *               email:
  *                 type: string
  *                 example: abcde@gmail.com
+ *               phone_number:
+ *                 type: string
+ *                 example: 09xxxxxxx
  *     responses:
  *       200:
  *         description: Success
  */
 router.post('/register', Validate.validateRegister, UserController.registerUserController)
+/**
+ * @swagger /api/login:
+ *   post:
+ *     summary: Login user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone_number:
+ *                 type: string
+ *                 example: 09xxxxxxx
+ *               password:
+ *                 type: string
+ *                 example: user12345
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.post('/login', Validate.validateLogin, UserController.loginUserController)
 
 
 export default router
