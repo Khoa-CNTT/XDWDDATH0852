@@ -15,11 +15,12 @@
             <button @click="selectedCategory = 'Gà rán'">Gà rán</button>
             <button @click="selectedCategory = 'Cà phê'">Cà phê</button>
         </div>
-        <div class="list_product">
+        <div class="list">
+            <div class="list_product">
             <template v-for="(value, index) in filteredProducts" :key="index" >
                 <div class="producta">
                     <img v-bind:src="value.img" alt="" />
-                    <div style="height: 70px" class="ghichu">
+                    <div style="height: 70px;" class="ghichu">
                         <p class="fs-5 mt-2">{{ value.name }}</p>
                     </div>
                     <div class="price d-flex justify-content-between">
@@ -32,6 +33,7 @@
                 </div>
             </template>
 
+        </div>
         </div>
     </div>
 </template>
@@ -95,17 +97,11 @@ export default {
 };
 </script>
 <style>
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
     .list_product {
         display: grid !important;
         /* Đảm bảo grid được áp dụng */
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    .allproduct {
-        display: grid !important;
-        /* Đảm bảo grid được áp dụng */
-        grid-template-columns: repeat(1, 1fr) !important;
+        grid-template-columns: repeat(3, 1fr) !important;
     }
 }
 
@@ -116,23 +112,27 @@ export default {
         grid-template-columns: repeat(1, 1fr) !important;
     }
 }
-
-.list_product {
-    display: grid;
-    justify-items: center;
-    gap: 10px;
-    grid-template-columns: repeat(4, 1fr);
-    /* Mặc định là 3 cột */
+.list{
+    margin-top: 30px;
+   display: flex;
+   justify-content: center;
 }
-
+.list_product {
+    width: 80%;
+    display: grid;
+    gap: 25px;
+    grid-template-columns: repeat(4, 1fr);
+}
 .producta {
-    padding: 10px;
-    border-radius: 10px;
+   border: rgb(247, 198, 198) solid 1px;
+   padding: 10px;   
+   border-radius: 10px;
 }
 
 .producta img {
     width: 100%;
     height: 400px;
+    border-radius: 10px;
 }
 
 .producta .price {
@@ -144,7 +144,6 @@ export default {
     border: none;
     background-color: white;
     font-size: 13px;
-
     transition: all 0.3s ease;
 }
 

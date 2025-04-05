@@ -7,11 +7,12 @@
                 happens.
             </p>
         </div>
-        <div class="list_product">
+        <div class="list">
+            <div class="list_pages">
             <template v-for="(value, index) in list_pages" :key="index">
-                <div style="background-color: rgb(245, 237, 237) ;" class="producta">
-                    <img style="height: 200px;" v-bind:src="value.img" alt="" />
-                    <div style="height: 20px" class="ghichu">
+                <div style="background-color: rgb(245, 237, 237) ;" class="product-all">
+                    <img v-bind:src="value.img" alt="" />
+                    <div class="ghichu">
                         <p class="fs-7">{{ value.time }}</p>
                     </div>
                     <div class="price d-flex justify-content-between">
@@ -21,6 +22,8 @@
             </template>
 
         </div>
+        </div>
+       
     </div>
 </template>
 <script>
@@ -48,10 +51,10 @@ export default {
 </script>
 <style>
 @media (max-width: 1000px) {
-    .list_product {
+    .list_pages {
         display: grid !important;
         /* Đảm bảo grid được áp dụng */
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(3, 1fr) !important;
     }
 
     .allproduct {
@@ -62,73 +65,40 @@ export default {
 }
 
 @media (max-width: 600px) {
-    .list_product {
+    .list_pages {
         display: grid !important;
         /* Đảm bảo grid được áp dụng */
         grid-template-columns: repeat(1, 1fr) !important;
     }
 }
-
-.list_product {
+.list{
+    display: flex;
+    justify-content: center;
+}
+.list_pages {
+    width: 80%;
     display: grid;
-    justify-items: center;
-    gap: 10px;
-    grid-template-columns: repeat(5, 1fr);
-    /* Mặc định là 3 cột */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    
 }
 
-.producta {
-    padding: 10px;
+.product-all{
+    background-color: rgb(245, 237, 237);
+    padding: 15px;
     border-radius: 10px;
 }
 
-.producta img {
+.product-all img {
     width: 100%;
-    height: 400px;
+    height: 200px;
+    /* object-fit: cover; */
+    border-radius: 10px;
 }
 
-.producta .price {
-    display: flex;
-    align-items: center;
-}
 
-.price button {
-    border: none;
-    background-color: white;
-    font-size: 13px;
-
-    transition: all 0.3s ease;
-}
-
-.price button:hover {
-    border: 1px solid rgb(139, 139, 11);
-    padding: 10px 20px;
-    border-radius: 50px;
-}
-
-.producta:hover {
+.product-all:hover {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.option-product {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.option-product button {
-    padding: 10px 20px;
-    margin: 10px;
-    border: 1px solid #b6a3a5;
-    background-color: white;
-    font-weight: 600;
-    border-radius: 20px;
-}
-
-.option-product button:hover {
-    border: 1px solid #ad343e;
-    background-color: #ad343e;
-    color: white;
-    transition: 0.3s;
-}
 </style>

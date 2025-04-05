@@ -19,7 +19,17 @@ const routes = [
     {
         path : '/contact',
         component: ()=>import('../components/Client/Contact/Contact.vue'),
-        
+
+    },
+    {
+        path : '/Register',
+        component: ()=>import('../components/Client/TaiKhoan/Dangki.vue'),
+
+    },
+    {
+        path : '/Login',
+        component: ()=>import('../components/Client/TaiKhoan/Dangnhap.vue'),
+
     },
     
 ]
