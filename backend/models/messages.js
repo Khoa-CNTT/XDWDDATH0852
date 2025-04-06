@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize'
-import sequelize from '../configs/database.js'
+import sequelize from '../config/database.js'
 import User from './users.js'
 import Order from './orders.js'
 

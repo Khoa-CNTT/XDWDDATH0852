@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 import Category from './categories.js'
-import sequelize from '../configs/database.js'
+import sequelize from '../config/database.js'
 
 const MenuItem = sequelize.define('MenuItem', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
