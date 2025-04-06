@@ -1,4 +1,4 @@
-import sequelize from '../configs/database.js';
+import sequelize from '../config/database.js';
 
 // Import các model
 import User from './users.js';
@@ -56,7 +56,7 @@ Message.belongsTo(Order, { foreignKey: 'order_Id' });
 
 const syncDB = async () => {
     try {
-        await sequelize.sync({ alter: true });
+        await sequelize.sync({ alter: true }); // { force: true } để xóa database
         console.log('✅ Database synced successfully!');
     } catch (error) {
         console.error('❌ Database sync failed:', error);
