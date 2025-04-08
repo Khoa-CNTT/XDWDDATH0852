@@ -1,9 +1,8 @@
 import express from 'express'
+import { loginController, registerController } from '../controllers/user.controller.js'
 const router = express.Router()
 
-import UserController from '../controllers/user.controller.js'
-import Validate from '../middlewares/validate.js'
-
+// Swagger
 /**
  * @swagger
  * tags:
@@ -11,17 +10,7 @@ import Validate from '../middlewares/validate.js'
  */
 
 /**
- * @swagger /api/all:
- *   get:
- *     summary: Get all user
- *     tags: [User]
- *     responses:
- *       200:
- *         description: Success
- */
-router.get('/all', UserController.getAllUserController)
-/**
- * @swagger /api/register:
+ * @swagger /api/users/register:
  *   post:
  *     summary: Register user
  *     tags: [User]
@@ -34,23 +23,26 @@ router.get('/all', UserController.getAllUserController)
  *             properties:
  *               fullname:
  *                 type: string
- *                 example: "Nguyễn Văn An"
+ *                 example: ......
  *               password:
  *                 type: string
- *                 example: user12345
+ *                 example: ......
  *               email:
  *                 type: string
- *                 example: abcde@gmail.com
+ *                 example: ......@gmail.com
  *               phone_number:
  *                 type: string
  *                 example: 09xxxxxxx
+ *               address:
+ *                 type: string
+ *                 example: ......
  *     responses:
  *       200:
  *         description: Success
  */
-router.post('/register', Validate.validateRegister, UserController.registerUserController)
+router.post('/register', registerController) // Đăng ký người dùng
 /**
- * @swagger /api/login:
+ * @swagger /api/users/login:
  *   post:
  *     summary: Login user
  *     tags: [User]
@@ -63,15 +55,14 @@ router.post('/register', Validate.validateRegister, UserController.registerUserC
  *             properties:
  *               phone_number:
  *                 type: string
- *                 example: 09xxxxxxx
+ *                 example: "09xxxxxxx"
  *               password:
  *                 type: string
- *                 example: user12345
+ *                 example: "....."
  *     responses:
  *       200:
  *         description: Success
  */
-router.post('/login', Validate.validateLogin, UserController.loginUserController)
-
+router.post('/login', loginController) // Đăng nhập
 
 export default router

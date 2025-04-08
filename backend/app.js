@@ -1,25 +1,28 @@
-// Setup or import package to in the project
+// Cài đặt or thêm package vào dự án (project)
 import express from 'express'
 import cors from 'cors'
 import setupSwagger from './swagger/swagger.js'
 import dotenv from 'dotenv'
 import { syncDB } from './models/index.js'
 
-// Setup Express App
+// Khai báo app
 const app = express()
 
-// Using middleware
+// Sử dụng middleware
 app.use(cors())
 app.use(express.json())
 dotenv.config()
 
-// Import route
+// Gán route cho app
+import appRoutes from './routes/app.route.js'
 
-// Using routes
+// Using app.routes
+app.use('/api', appRoutes)
 
-// Using swagger
+// Cài đặt swagger
 setupSwagger(app)
 
+// Tạo hàm startServer
 const startServer = async () => {
     try {
         await syncDB()
@@ -39,4 +42,5 @@ const startServer = async () => {
     }
 }
 
+// Khởi động server
 startServer()

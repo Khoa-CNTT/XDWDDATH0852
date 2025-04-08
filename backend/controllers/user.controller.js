@@ -1,30 +1,52 @@
-import TryCatch from "../middlewares/trycatch.js";
-import UserService from '../services/user.service.js'
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+import { User } from "../models/index.js"
+import TryCatch from "../utils/trycatch.js"
 
-const getAllUserController = TryCatch(async (req, res) => {
-    let result = await UserService.getAllUserService()
-    res.status(200).json({
-        message: 'Get all users successfully',
-        data: result,
-    });
+// Đăng ký người dùng
+export const registerController = TryCatch(async (req, res) => {
+    const { phone_number, password, email, fullname, address, role_name } = req.body
+
+    const existingUser = await User.findOne({ where: { phone_number } })
+    if (existingUser) {
+        return res.status(400).json({ message: "Số điện thoại đã được sử dụng!" })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const user = await User.create({
+        phone_number,
+        password: hashedPassword,
+        fullname,
+        email,
+        address,
+        role_name,
+    })
+
+    res.status(201).json({ message: "Đăng ký thành công!", user })
 })
 
-const registerUserController = TryCatch(async (req, res) => {
-    const { fullname, email, password, phone_number } = req.body;
-    const user = await UserService.registerUserService(fullname, email, password, phone_number)
-    if (user.success === false) return res.status(400).json({ message: 'Email already registered' });
-    return res.status(200).json({ message: 'Register successfuly' });
+// Đăng nhập
+export const loginController = TryCatch(async (req, res) => {
+    const { phone_number, password } = req.body
+
+    const user = await User.findOne({ where: { phone_number } })
+
+    if (!user) {
+        return res.status(404).json({ message: "Số điện thoại không tồn tại!" })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+        return res.status(400).json({ message: "Sai mật khẩu!" })
+    }
+
+    const token = jwt.sign(
+        { userId: user.id, role: user.role_name },
+        "secret_key",
+        { expiresIn: "1h" }
+    )
+
+    res.json({ message: "Đăng nhập thành công!", token, user })
 })
 
-const loginUserController = TryCatch(async (req, res) => {
-    const { phone_number, password } = req.body;
-    const user = await UserService.loginUserService(phone_number, password)
-    if (user.success === false) return res.status(401).json({ message: 'Invalid email or password' });
-    return res.status(200).json({ message: 'Login successfuly' });
-})
-
-export default {
-    getAllUserController,
-    registerUserController,
-    loginUserController,
-}
