@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style=" font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
     <nav
       class="navbar navbar-expand-lg bg-white fixed-top"
       :class="{ hidden: !isHeaderVisible }"

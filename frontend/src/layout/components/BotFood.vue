@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style=" font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
     <footer class="footer">
       <div class="logo-section">
         <div class="logo">
