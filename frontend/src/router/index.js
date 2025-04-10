@@ -31,12 +31,22 @@ const routes = [
         component: ()=>import('../components/Client/TaiKhoan/Dangnhap.vue'),
 
     },
-    
+    {
+        path: '/article/:id',
+        name: 'ArticleDetail',
+        component: () => import('../components/Client/Pages/ArticleDetail.vue'),
+    },
 ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: routes
-})
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition; // Giữ nguyên vị trí cuộn nếu quay lại trang trước đó
+      }
+      return { top: 0, left: 0, behavior: 'smooth' }; // Cuộn lên đầu trang với hiệu ứng mượt
+    }
+  });
 
 export default router
