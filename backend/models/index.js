@@ -61,7 +61,7 @@ Message.belongsTo(Order, { foreignKey: "order_Id" });
 // ==========================
 const syncDB = async () => {
     try {
-        await sequelize.sync({ alter: true }); // {force: true} để xóa DB
+        await sequelize.sync({ force: true }); // {force: true} để xóa DB
         console.log("✅ Database synced successfully!");
     } catch (error) {
         console.error("❌ Database sync failed:", error);

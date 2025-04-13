@@ -4,7 +4,8 @@ import { createOrderDetail, deleteOrderDetail, getOrderDetailsByOrderId, updateO
 const router = express.Router()
 
 /**
- * @swagger /api/order-detail/create:
+ * @swagger 
+ *   /api/order-detail/create:
  *   post:
  *     summary: Tạo chi tiết đơn hàng mới
  *     tags: [OrderDetail]
@@ -30,7 +31,8 @@ const router = express.Router()
 router.post("/create", createOrderDetail)
 
 /**
- * @swagger /api/order-detail/order/{orderId}:
+ * @swagger 
+ *   /api/order-detail/order/{orderId}:
  *   get:
  *     summary: Lấy chi tiết đơn hàng theo orderId
  *     tags: [OrderDetail]
@@ -48,7 +50,8 @@ router.post("/create", createOrderDetail)
 router.get("/order/:orderId", getOrderDetailsByOrderId)
 
 /**
- * @swagger /api/order-detail/update/{id}:
+ * @swagger 
+ *   /api/order-detail/update/{id}:
  *   put:
  *     summary: Cập nhật chi tiết đơn hàng
  *     tags: [OrderDetail]
@@ -77,7 +80,8 @@ router.get("/order/:orderId", getOrderDetailsByOrderId)
 router.put("/update/:id", updateOrderDetail)
 
 /**
- * @swagger /api/order-detail/delete/{id}:
+ * @swagger 
+ *   /api/order-detail/delete/{id}:
  *   delete:
  *     summary: Xoá chi tiết đơn hàng
  *     tags: [OrderDetail]

@@ -1,18 +1,21 @@
 import express from 'express'
-import { changePassword, deleteUserController, getAllUserController, getUserByIdController, loginController, registerController, updateUserController } from '../controllers/user.controller.js'
+import {
+  changePassword,
+  deleteUserController,
+  getAllUserController,
+  getUserByIdController,
+  loginController,
+  registerController,
+  updateUserController
+} from '../controllers/user.controller.js'
+
 const router = express.Router()
 
-// Swagger
 /**
  * @swagger
- * tags:
- *   - name: User
- */
-
-/**
- * @swagger /api/users/register:
+ * /api/users/register:
  *   post:
- *     summary: Register user
+ *     summary: Đăng ký người dùng mới
  *     tags: [User]
  *     requestBody:
  *       required: true
@@ -23,28 +26,30 @@ const router = express.Router()
  *             properties:
  *               fullname:
  *                 type: string
- *                 example: ......
+ *                 example: Nguyễn Văn A
  *               password:
  *                 type: string
- *                 example: ......
+ *                 example: 123456
  *               email:
  *                 type: string
- *                 example: ......@gmail.com
+ *                 example: nguyenvana@gmail.com
  *               phone_number:
  *                 type: string
- *                 example: 09xxxxxxx
+ *                 example: 0901234567
  *               address:
  *                 type: string
- *                 example: ......
+ *                 example: 123 Đường ABC, TP.HCM
  *     responses:
  *       200:
- *         description: Success
+ *         description: Đăng ký thành công
  */
-router.post('/register', registerController) // Đăng ký người dùng
+router.post('/register', registerController)
+
 /**
- * @swagger /api/users/login:
+ * @swagger
+ * /api/users/login:
  *   post:
- *     summary: Login user
+ *     summary: Đăng nhập người dùng
  *     tags: [User]
  *     requestBody:
  *       required: true
@@ -55,54 +60,60 @@ router.post('/register', registerController) // Đăng ký người dùng
  *             properties:
  *               phone_number:
  *                 type: string
- *                 example: "09xxxxxxx"
+ *                 example: 0901234567
  *               password:
  *                 type: string
- *                 example: "....."
+ *                 example: 123456
  *     responses:
  *       200:
- *         description: Success
+ *         description: Đăng nhập thành công
  */
-router.post('/login', loginController) // Đăng nhập
+router.post('/login', loginController)
+
 /**
- * @swagger /api/users/all:
+ * @swagger
+ * /api/users/all:
  *   get:
- *     summary: Get all user
+ *     summary: Lấy danh sách tất cả người dùng
  *     tags: [User]
- *     responses:
- *       200:
- *         description: Success
- */
-router.get('/all', getAllUserController) // Lấy danh sách tất cả người dùng
-/**
- * @swagger /api/users/get/{id}:
- *   get:
- *     summary: Get user by id
- *     tags: [User]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID của người dùng
- *         schema:
- *           type: integer
  *     responses:
  *       200:
  *         description: Thành công
- *       404:
- *         description: Không tìm thấy người dùng
  */
-router.get('/get/:id', getUserByIdController) // Lấy một người dùng
+router.get('/all', getAllUserController)
+
 /**
- * @swagger /api/users/update/{id}:
- *   put:
- *     summary: Update one user
+ * @swagger
+ * /api/users/get/{id}:
+ *   get:
+ *     summary: Lấy thông tin người dùng theo ID
  *     tags: [User]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of user
+ *         description: ID của người dùng cần lấy
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lấy thông tin thành công
+ *       404:
+ *         description: Không tìm thấy người dùng
+ */
+router.get('/get/:id', getUserByIdController)
+
+/**
+ * @swagger
+ * /api/users/update/{id}:
+ *   put:
+ *     summary: Cập nhật thông tin người dùng
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của người dùng cần cập nhật
  *         schema:
  *           type: integer
  *     requestBody:
@@ -114,16 +125,16 @@ router.get('/get/:id', getUserByIdController) // Lấy một người dùng
  *             properties:
  *               phone_number:
  *                 type: string
- *                 example: "09xxxxxxxx"
+ *                 example: 0901234567
  *               password:
  *                 type: string
- *                 example: "...."
+ *                 example: 123456
  *               fullname:
  *                 type: string
- *                 example: "...."
+ *                 example: Nguyễn Văn A
  *               address:
  *                 type: string
- *                 example: "...."
+ *                 example: 123 Đường ABC, TP.HCM
  *     responses:
  *       200:
  *         description: Cập nhật thành công
@@ -132,38 +143,42 @@ router.get('/get/:id', getUserByIdController) // Lấy một người dùng
  *       404:
  *         description: Không tìm thấy người dùng
  */
-router.put("/update/:id", updateUserController); // Cập nhật thông tin một người dùng
+router.put("/update/:id", updateUserController)
+
 /**
- * @swagger /api/users/delete/{id}:
+ * @swagger
+ * /api/users/delete/{id}:
  *   delete:
- *     summary: Delete one user
+ *     summary: Xoá người dùng theo ID
  *     tags: [User]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of user
+ *         description: ID của người dùng cần xoá
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Cập nhật thành công
+ *         description: Xoá thành công
  *       400:
  *         description: Dữ liệu không hợp lệ
  *       404:
  *         description: Không tìm thấy người dùng
  */
-router.delete("/delete/:id", deleteUserController); // Xóa thông tin một người dùng
+router.delete("/delete/:id", deleteUserController)
+
 /**
- * @swagger /api/users/change-password/{id}:
+ * @swagger
+ * /api/users/change-password/{id}:
  *   put:
- *     summary: Change password of user
+ *     summary: Đổi mật khẩu người dùng
  *     tags: [User]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of user
+ *         description: ID của người dùng cần đổi mật khẩu
  *         schema:
  *           type: integer
  *     requestBody:
@@ -175,18 +190,18 @@ router.delete("/delete/:id", deleteUserController); // Xóa thông tin một ng�
  *             properties:
  *               currentPassword:
  *                 type: string
- *                 example: "...."
+ *                 example: 123456
  *               newPassword:
  *                 type: string
- *                 example: "...."
+ *                 example: 654321
  *     responses:
  *       200:
- *         description: Cập nhật thành công
+ *         description: Đổi mật khẩu thành công
  *       400:
- *         description: Dữ liệu không hợp lệ
+ *         description: Mật khẩu không hợp lệ
  *       404:
  *         description: Không tìm thấy người dùng
  */
-router.put("/change-password/:id", changePassword); // Thay đổi mật khẩu
+router.put("/change-password/:id", changePassword)
 
 export default router
