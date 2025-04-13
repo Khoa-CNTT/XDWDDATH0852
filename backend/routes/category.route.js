@@ -1,20 +1,20 @@
 import express from "express"
 import upload from "../middlewares/upload.middleware.js"
-import { createCategory, deleteCategory, getCategories, getCategoryById, updateCategory } from "../controllers/category.controller.js"
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  getCategoryById,
+  updateCategory
+} from "../controllers/category.controller.js"
 
 const router = express.Router()
 
-// Swagger
 /**
  * @swagger
- * tags:
- *   - name: Category
-*/
-
-/**
- * @swagger /api/category/create:
+ * /api/category/create:
  *   post:
- *     summary: Create new category
+ *     summary: Tạo danh mục mới
  *     tags: [Category]
  *     consumes:
  *       - multipart/form-data
@@ -27,52 +27,61 @@ const router = express.Router()
  *             properties:
  *               name:
  *                 type: string
+ *                 example: Đồ uống
  *               description:
  *                 type: string
+ *                 example: Các loại thức uống
  *               img:
  *                 type: string
  *                 format: binary
  *     responses:
  *       201:
- *         description: success
+ *         description: Tạo danh mục thành công
  *       400:
- *         description: failed
+ *         description: Tạo danh mục thất bại
  */
 router.post("/create", upload.single('img'), createCategory)
+
 /**
- * @swagger /api/category/all:
+ * @swagger
+ * /api/category/all:
  *   get:
- *     summary: Get all category
+ *     summary: Lấy tất cả danh mục
  *     tags: [Category]
  *     responses:
- *       201:
- *         description: success
+ *       200:
+ *         description: Lấy dữ liệu thành công
  *       400:
- *         description: failed
+ *         description: Lấy dữ liệu thất bại
  */
 router.get("/all", getCategories)
+
 /**
- * @swagger /api/category/get/{id}:
+ * @swagger
+ * /api/category/get/{id}:
  *   get:
- *     summary: Get category by id
+ *     summary: Lấy danh mục theo ID
  *     tags: [Category]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: ID của danh mục
  *         schema:
  *           type: integer
  *     responses:
- *       201:
- *         description: success
+ *       200:
+ *         description: Lấy dữ liệu thành công
  *       400:
- *         description: failed
+ *         description: Lấy dữ liệu thất bại
  */
 router.get("/get/:id", getCategoryById)
+
 /**
- * @swagger /api/category/update/{id}:
+ * @swagger
+ * /api/category/update/{id}:
  *   put:
- *     summary: Update category by id
+ *     summary: Cập nhật danh mục theo ID
  *     tags: [Category]
  *     consumes:
  *       - multipart/form-data
@@ -80,6 +89,7 @@ router.get("/get/:id", getCategoryById)
  *       - in: path
  *         name: id
  *         required: true
+ *         description: ID của danh mục
  *         schema:
  *           type: integer
  *     requestBody:
@@ -91,36 +101,39 @@ router.get("/get/:id", getCategoryById)
  *             properties:
  *               name:
  *                 type: string
+ *                 example: Món chính
  *               description:
  *                 type: string
+ *                 example: Các món ăn chính
  *               img:
  *                 type: string
  *                 format: binary
  *     responses:
- *       201:
- *         description: success
+ *       200:
+ *         description: Cập nhật danh mục thành công
  *       400:
- *         description: failed
+ *         description: Cập nhật danh mục thất bại
  */
 router.put("/update/:id", upload.single('img'), updateCategory)
+
 /**
- * @swagger /api/category/delete/{id}:
+ * @swagger
+ * /api/category/delete/{id}:
  *   delete:
- *     summary: Delete category by id
+ *     summary: Xoá danh mục theo ID
  *     tags: [Category]
- *     consumes:
- *       - multipart/form-data
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: ID của danh mục
  *         schema:
  *           type: integer
  *     responses:
- *       201:
- *         description: success
+ *       200:
+ *         description: Xoá danh mục thành công
  *       400:
- *         description: failed
+ *         description: Xoá danh mục thất bại
  */
 router.delete("/delete/:id", deleteCategory)
 

@@ -4,7 +4,8 @@ import { cancelOrder, createOrder, deleteOrder, getAllOrders, getOrderById, getO
 const router = express.Router();
 
 /**
- * @swagger /api/orders/all:
+ * @swagger 
+ *   /api/orders/all:
  *   get:
  *     summary: Lấy danh sách tất cả đơn hàng
  *     tags: [Orders]
@@ -15,7 +16,8 @@ const router = express.Router();
 router.get("/all", getAllOrders);
 
 /**
- * @swagger /api/orders/{id}:
+ * @swagger 
+ *   /api/orders/{id}:
  *   get:
  *     summary: Lấy thông tin đơn hàng theo ID
  *     tags: [Orders]
@@ -33,7 +35,8 @@ router.get("/all", getAllOrders);
 router.get("/:id", getOrderById);
 
 /**
- * @swagger /api/orders/user/{userId}:
+ * @swagger 
+ *   /api/orders/user/{userId}:
  *   get:
  *     summary: Lấy đơn hàng theo user ID
  *     tags: [Orders]
@@ -51,7 +54,8 @@ router.get("/:id", getOrderById);
 router.get("/user/:userId", getOrderByUserID);
 
 /**
- * @swagger /api/orders/create:
+ * @swagger 
+ *   /api/orders/create:
  *   post:
  *     summary: Tạo đơn hàng mới
  *     tags: [Orders]
@@ -82,7 +86,8 @@ router.get("/user/:userId", getOrderByUserID);
 router.post("/create", createOrder);
 
 /**
- * @swagger /api/orders/update/{id}:
+ * @swagger 
+ *   /api/orders/update/{id}:
  *   put:
  *     summary: Cập nhật trạng thái đơn hàng
  *     tags: [Orders]
@@ -111,7 +116,8 @@ router.post("/create", createOrder);
 router.put("/update/:id", updateOrder);
 
 /**
- * @swagger /api/orders/cancel/{id}:
+ * @swagger 
+ *   /api/orders/cancel/{id}:
  *   put:
  *     summary: Hủy đơn hàng
  *     tags: [Orders]
@@ -129,7 +135,8 @@ router.put("/update/:id", updateOrder);
 router.put("/cancel/:id", cancelOrder);
 
 /**
- * @swagger /api/orders/delete/{id}:
+ * @swagger 
+ *   /api/orders/delete/{id}:
  *   delete:
  *     summary: Xóa đơn hàng
  *     tags: [Orders]
