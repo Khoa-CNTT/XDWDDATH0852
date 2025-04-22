@@ -10,6 +10,7 @@ import orderDetailRoutes from './orderDetail.route.js'
 import cartRoutes from './cart.route.js'
 import reviewRoutes from "./review.route.js"
 import voucherRoutes from "./voucher.route.js"
+import paymentRoutes from './payment.route.js'
 
 // Sử dụng các routes
 router.use('/users', userRoutes)
@@ -20,6 +21,7 @@ router.use('/order-detail', orderDetailRoutes)
 router.use('/cart', cartRoutes)
 router.use('/review', reviewRoutes)
 router.use('/voucher', voucherRoutes)
+router.use('/payment', paymentRoutes)
 
 // Xuất router ra app.js
 export default router
