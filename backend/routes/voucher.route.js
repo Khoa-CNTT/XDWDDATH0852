@@ -1,5 +1,5 @@
 import express from "express"
-import { createVoucher, getVouchers, getVoucherById, updateVoucher, deleteVoucher } from "../controllers/voucher.controller.js"
+import { createVoucher, getVouchers, getVoucherById, updateVoucher, deleteVoucher, checkVoucher } from "../controllers/voucher.controller.js"
 
 const router = express.Router()
 
@@ -109,5 +109,35 @@ router.put("/update/:id", updateVoucher)
  *         description: Đã xóa voucher
  */
 router.delete("/delete/:id", deleteVoucher)
+
+
+/**
+ * @swagger
+ * /api/voucher/check:
+ *   post:
+ *     summary: Kiểm tra mã voucher
+ *     tags: [Voucher] 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *               - total_price
+ *             properties:
+ *               code:
+ *                 type: string
+ *                 example: FREESHIP
+ *               total_price:
+ *                 type: number
+ *                 example: 200000
+ *     responses:
+ *       200:
+ *         description: Kết quả kiểm tra mã voucher
+ */
+router.post("/check", checkVoucher)
+
 
 export default router
