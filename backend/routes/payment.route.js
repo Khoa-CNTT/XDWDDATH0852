@@ -129,10 +129,70 @@ router.delete("/delete/:id", deletePayment)
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/PaymentRequestBody'
+ *             type: object
+ *             properties:
+ *               orderId:
+ *                 type: string
+ *                 example: "123456"
+ *               amount:
+ *                 type: number
+ *                 example: 150000
+ *               orderInfo:
+ *                 type: string
+ *                 example: "Thanh toán đơn hàng ABC"
+ *               returnUrl:
+ *                 type: string
+ *                 example: "http://localhost:5000/vnpay_return"
+ *               currency:
+ *                 type: string
+ *                 enum: [VND, USD]
+ *                 default: VND
  *     responses:
  *       200:
- *         description: Link thanh toán được trả về
+ *         description: Khởi tạo thanh toán thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *                   example: "00"
+ *                 message:
+ *                   type: string
+ *                   example: "Khởi tạo thanh toán thành công"
+ *                 data:
+ *                   type: string
+ *                   example: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_..."
+ *                 paymentId:
+ *                   type: string
+ *                   example: "abc123"
+ *       400:
+ *         description: Thông tin thanh toán không hợp lệ hoặc số tiền quá thấp
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *                   example: "01"
+ *                 message:
+ *                   type: string
+ *                   example: "Thông tin thanh toán không hợp lệ!"
+ *       404:
+ *         description: Đơn hàng không tồn tại
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *                   example: "02"
+ *                 message:
+ *                   type: string
+ *                   example: "Đơn hàng không tồn tại!"
  */
 router.post('/vnpay_initiate', initiateVNPAYPayment)
 

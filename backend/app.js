@@ -4,9 +4,12 @@ import cors from 'cors'
 import setupSwagger from './swagger/swagger.js'
 import dotenv from 'dotenv'
 import { syncDB } from './models/index.js'
+import http from 'http'
+import { initializeSocketIO } from './socket.js'
 
 // Khai báo app
 const app = express()
+const server = http.createServer(app);
 
 // Sử dụng middleware
 app.use(cors())
@@ -33,9 +36,11 @@ const startServer = async () => {
         })
 
         const PORT = process.env.PORT || 5000
-        app.listen(PORT, (req, res) => {
+        server.listen(PORT, () => {
             console.log(`🚀 Server is running on http://localhost:${PORT}`)
             console.log('📌 API Docs at: http://localhost:5000/api-docs')
+            initializeSocketIO(server)
+            console.log('🔌 Socket.IO initialized!')
         })
     } catch (error) {
         console.error("❌ Server failed to start:", error)

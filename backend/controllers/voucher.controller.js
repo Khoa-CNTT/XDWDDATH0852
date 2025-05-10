@@ -1,5 +1,7 @@
 import Voucher from "../models/vouchers.js"
 import TryCatch from '../utils/trycatch.js'
+import { Order } from "../models/index.js"
+
 
 // Thêm voucher mới
 export const createVoucher = TryCatch(async (req, res) => {
