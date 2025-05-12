@@ -2,10 +2,12 @@ import express from 'express'
 import {
   changePassword,
   deleteUserController,
+  forgotPassword,
   getAllUserController,
   getUserByIdController,
   loginController,
   registerController,
+  resetPassword,
   updateUserController
 } from '../controllers/user.controller.js'
 
@@ -203,5 +205,69 @@ router.delete("/delete/:id", deleteUserController)
  *         description: Không tìm thấy người dùng
  */
 router.put("/change-password/:id", changePassword)
+
+/**
+ * @swagger
+ * /api/users/forgot-password:
+ *   post:
+ *     summary: Gửi yêu cầu đặt lại mật khẩu
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email của tài khoản cần đặt lại mật khẩu
+ *           example:
+ *             email: "user@gmail.com"
+ *     responses:
+ *       200:
+ *         description: Đã gửi email đặt lại mật khẩu thành công
+ *       404:
+ *         description: Email không tồn tại trong hệ thống
+ *       500:
+ *         description: Lỗi server
+ */
+router.post("/forgot-password", forgotPassword)
+
+/**
+ * @swagger
+ * /api/users/reset-password:
+ *   post:
+ *     summary: Đặt lại mật khẩu mới
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - newPassword
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: "token"
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "newPassword"
+ *     responses:
+ *       200:
+ *         description: Đặt lại mật khẩu thành công
+ *       400:
+ *         description: Mã thông báo không hợp lệ hoặc đã hết hạn
+ *       500:
+ *         description: Lỗi server
+ */
+router.post("/reset-password", resetPassword)
 
 export default router

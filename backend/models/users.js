@@ -9,6 +9,9 @@ const User = sequelize.define('User', {
   address: { type: DataTypes.STRING, allowNull: true },
   role_name: { type: DataTypes.STRING, allowNull: false, defaultValue: 'customer' },
   created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  email: { type: DataTypes.STRING, unique: true, allowNull: false },
+  reset_token: { type: DataTypes.STRING, allowNull: true},
+  reset_token_expires: { type: DataTypes.DATE, allowNull: true }
 }, {
   timestamps: false,
 })
