@@ -15,7 +15,7 @@
         </div>
         <div class="mt-4 text-sm text-green-600 flex items-center">
           <i class='bx bx-trending-up text-sm mr-1'></i>
-          <span>12% increase</span>
+          <span>12% tăng</span>
         </div>
       </div>
 
@@ -26,12 +26,12 @@
           </div>
           <div>
             <p class="text-gray-500 text-sm">Tổng doanh thu</p>
-            <h3 class="text-2xl font-bold">$6,240</h3>
+            <h3 class="text-2xl font-bold">{{ totalRevenue.toLocaleString('vi-VN') }} VNĐ</h3>
           </div>
         </div>
         <div class="mt-4 text-sm text-green-600 flex items-center">
           <i class='bx bx-trending-up text-sm mr-1'></i>
-          <span>8% increase</span>
+          <span>8% tăng</span>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
         </div>
         <div class="mt-4 text-sm text-green-600 flex items-center">
           <i class='bx bx-trending-up text-sm mr-1'></i>
-          <span>24% increase</span>
+          <span>24% tăng</span>
         </div>
       </div>
 
@@ -63,7 +63,7 @@
         </div>
         <div class="mt-4 text-sm text-red-600 flex items-center">
           <i class='bx bx-trending-down text-sm mr-1'></i>
-          <span>3% decrease</span>
+          <span>3% giảm</span>
         </div>
       </div>
     </div>
@@ -90,13 +90,13 @@
               <tr v-for="order in recentOrders" :key="order.id">
                 <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{ order.id }}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">{{ order.name }}</td>
-                <td class="px-6 py-4 text-sm text-gray-900">{{ order.total }} VNĐ</td>
+                <td class="px-6 py-4 text-sm text-gray-900">{{ order.total.toLocaleString('vi-VN') }} VNĐ</td>
                 <td class="px-6 py-4">
                   <span :class="`px-3 py-1 rounded-full text-sm font-medium ${translateStatus(order.status).color}`">
                     {{ translateStatus(order.status).text }}
                   </span>
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-500">{{ order.date }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">{{ order.paymentStatus }}</td>
               </tr>
             </tbody>
           </table>
@@ -114,10 +114,10 @@
               <img :src="product.image" :alt="product.name" class="w-10 h-10 object-cover rounded mr-3">
               <div class="flex-grow">
                 <h3 class="text-sm font-medium text-gray-900">{{ product.name }}</h3>
-                <p class="text-sm text-gray-500">${{ product.price.toFixed(2) }}</p>
+                <p class="text-sm text-gray-500">{{ product.price.toLocaleString('vi-VN') }} VNĐ</p>
               </div>
               <div class="text-right">
-                <p class="text-sm font-medium text-gray-900">{{ product.sales }} sold</p>
+                <p class="text-sm font-medium text-gray-900">{{ product.sales }} lượt bán</p>
                 <p class="text-xs text-gray-500">{{ product.revenue }}</p>
               </div>
             </div>
@@ -132,10 +132,8 @@
 import { onMounted, ref } from 'vue';
 import { menuItemAPI, orderAPI, userAPI } from '../../services/apis';
 
+// Tổng đơn hàng
 const totalOrders = ref(0)
-const totalUsers = ref(0)
-const totalProducts = ref(0)
-
 onMounted(async () => {
   try {
     const response = await orderAPI.getOrderAll()
@@ -145,6 +143,32 @@ onMounted(async () => {
   }
 });
 
+// Tổng doanh thu
+const totalRevenue = ref(0);
+onMounted(async () => {
+  try {
+    const response = await orderAPI.getOrderAll();
+    const orders = response.data;
+
+    totalOrders.value = orders.length;
+
+    // Tính tổng doanh thu từ các đơn hàng đã thanh toán
+    const revenue = orders.reduce((sum, order) => {
+      if (order.payment_status === 'paid') {
+        return sum + (order.total_price || 0);
+      }
+      return sum;
+    }, 0);
+
+    totalRevenue.value = +revenue;
+
+
+  } catch (error) {
+    console.error('Lỗi khi lấy dữ liệu đơn hàng:', error);
+  }
+});
+
+const totalUsers = ref(0)
 onMounted(async () => {
   try {
     const response = await userAPI.getAllUsers()
@@ -154,6 +178,8 @@ onMounted(async () => {
   }
 })
 
+// Tổng sản phẩm
+const totalProducts = ref(0)
 onMounted(async () => {
   try {
     const response = await menuItemAPI.getAll()
@@ -172,73 +198,75 @@ const translateStatus = (status) => {
     cancelled: { text: 'Đã hủy', color: 'bg-red-100 text-red-800' },
   };
 
-
   if (!status) {
     console.log("Status is undefined or null:", status);
   }
 
-  const normalized = status?.toLowerCase;
+  const normalized = status?.toLowerCase();
 
   return statusMap[normalized] || { text: 'Không rõ', color: 'bg-gray-100 text-gray-800' };
 }
 
+// Đơn hàng gần đây
 const recentOrders = ref([]);
 onMounted(async () => {
   try {
-    const response = await orderAPI.getOrderAll()
-    recentOrders.value = response.data.slice(0, 5).map(order => ({
+    const response = await orderAPI.getOrderAll();
+    // Sắp xếp giảm dần theo id hoặc createdAt
+    const sortedOrders = response.data.sort((a, b) => b.id - a.id);
+    // Lấy 5 đơn hàng mới nhất
+    recentOrders.value = sortedOrders.slice(0, 5).map(order => ({
       id: order.id,
       name: order.User.fullname || 'Ẩn danh',
-      total: order.total_price.toLocaleString('vi-VN') || '0',
-      status: translateStatus(order.status),
+      total: +order.total_price || '0',
+      status: order.status,
       paymentStatus: order.payment_status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán',
-    }
-    ))
+    }));
   } catch (err) {
-    console.error('Lỗi lấy đơn hàng gần đây:', err)
+    console.error('Lỗi lấy đơn hàng gần đây:', err);
   }
 })
 
 const topProducts = ref([
   {
     id: 1,
-    name: 'Classic Burger',
-    price: 8.99,
-    sales: 42,
-    revenue: '$377.58',
-    image: '/placeholder.svg?height=100&width=100'
+    name: 'Burger phô mai',
+    price: 45000,
+    sales: 21,
+    revenue: '377.58',
+    image: 'https://i.pinimg.com/736x/77/fe/73/77fe73fe2444046dc17eed609e2b5bfc.jpg'
   },
   {
     id: 2,
-    name: 'Margherita Pizza',
-    price: 12.99,
-    sales: 38,
-    revenue: '$493.62',
-    image: '/placeholder.svg?height=100&width=100'
+    name: 'Burger bò kép',
+    price: 55000,
+    sales: 18,
+    revenue: '493.62',
+    image: 'https://i.pinimg.com/736x/f3/ec/56/f3ec56efb86db9f06b081ca7963b2c62.jpg'
   },
   {
     id: 3,
-    name: 'California Roll',
-    price: 9.99,
-    sales: 35,
-    revenue: '$349.65',
-    image: '/placeholder.svg?height=100&width=100'
+    name: 'Pizza xúc xích',
+    price: 80000,
+    sales: 20,
+    revenue: '349.65',
+    image: 'https://i.pinimg.com/736x/e0/c5/b5/e0c5b5ee8e4c56894a8550da6c789d73.jpg'
   },
   {
     id: 4,
-    name: 'Chocolate Brownie',
-    price: 6.99,
-    sales: 30,
-    revenue: '$209.70',
-    image: '/placeholder.svg?height=100&width=100'
+    name: 'Khoai tây chiên',
+    price: 30000,
+    sales: 16,
+    revenue: '209.70',
+    image: 'https://i.pinimg.com/736x/6e/7b/5e/6e7b5e91357a7ce785a75d3449c1ded5.jpg'
   },
   {
     id: 5,
-    name: 'Strawberry Milkshake',
-    price: 4.99,
-    sales: 28,
-    revenue: '$139.72',
-    image: '/placeholder.svg?height=100&width=100'
+    name: 'Sữa lắc socola',
+    price: 35000,
+    sales: 13,
+    revenue: '139.72',
+    image: 'https://i.pinimg.com/736x/68/6c/1c/686c1c731d606d0ddc05a2955b1852c5.jpg'
   }
 ]);
 </script>

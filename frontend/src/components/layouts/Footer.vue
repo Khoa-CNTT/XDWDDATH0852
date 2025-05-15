@@ -1,63 +1,65 @@
 <template>
   <div class="font-sans">
     <footer class="bg-[#3b3b3b] px-20 py-20 flex flex-wrap justify-between gap-10 mt-12 text-white">
-      <!-- Logo Section -->
+      <!-- Phần Logo và mô tả -->
       <div class="max-w-xs space-y-4">
         <div class="w-10">
           <!-- <img class="w-full" src="@/assets/img/1.png" alt="Logo" /> -->
         </div>
         <p class="text-sm leading-relaxed">
-          In the new era of technology we look to the future with certainty and
-          pride for our company and.
+          Trong thời đại công nghệ mới, chúng tôi hướng tới tương lai với sự tự tin và tự hào về công ty của mình.
         </p>
+
+        <!-- Icon mạng xã hội dùng Boxicons -->
         <div class="flex gap-3 mt-3 text-white">
           <a href="#" class="w-8 h-8 bg-red-700 rounded-full flex items-center justify-center hover:bg-red-900">
-            <i class="fab fa-twitter"></i>
+            <i class="bx bxl-twitter"></i>
           </a>
           <a href="#" class="w-8 h-8 bg-red-700 rounded-full flex items-center justify-center hover:bg-red-900">
-            <i class="fab fa-facebook"></i>
+            <i class="bx bxl-facebook"></i>
           </a>
           <a href="#" class="w-8 h-8 bg-red-700 rounded-full flex items-center justify-center hover:bg-red-900">
-            <i class="fab fa-instagram"></i>
+            <i class="bx bxl-instagram"></i>
           </a>
           <a href="#" class="w-8 h-8 bg-red-700 rounded-full flex items-center justify-center hover:bg-red-900">
-            <i class="fab fa-pinterest"></i>
+            <i class="bx bxl-pinterest-alt"></i>
           </a>
         </div>
       </div>
 
-      <!-- Page Links -->
+      <!-- Danh sách các liên kết -->
       <div class="flex gap-14">
+        <!-- Các trang chính -->
         <ul class="space-y-2">
-          <li class="text-red-600 font-semibold">Pages</li>
-          <li><a href="#" class="hover:text-red-400">Home</a></li>
-          <li><a href="#" class="hover:text-red-400">About</a></li>
-          <li><a href="#" class="hover:text-red-400">Menu</a></li>
-          <li><a href="#" class="hover:text-red-400">Pricing</a></li>
+          <li class="text-red-600 font-semibold">Trang</li>
+          <li><a href="#" class="hover:text-red-400">Trang chủ</a></li>
+          <li><a href="#" class="hover:text-red-400">Giới thiệu</a></li>
+          <li><a href="#" class="hover:text-red-400">Thực đơn</a></li>
+          <li><a href="#" class="hover:text-red-400">Giá cả</a></li>
           <li><a href="#" class="hover:text-red-400">Blog</a></li>
-          <li><a href="#" class="hover:text-red-400">Contact</a></li>
-          <li><a href="#" class="hover:text-red-400">Delivery</a></li>
+          <li><a href="#" class="hover:text-red-400">Liên hệ</a></li>
+          <li><a href="#" class="hover:text-red-400">Giao hàng</a></li>
         </ul>
+
+        <!-- Các trang tiện ích -->
         <ul class="space-y-2">
-          <li class="text-red-600 font-semibold">Utility Pages</li>
-          <li><a href="#" class="hover:text-red-400">Start Here</a></li>
-          <li><a href="#" class="hover:text-red-400">Styleguide</a></li>
-          <li><a href="#" class="hover:text-red-400">Password Protected</a></li>
-          <li><a href="#" class="hover:text-red-400">404 Not Found</a></li>
-          <li><a href="#" class="hover:text-red-400">Licenses</a></li>
-          <li><a href="#" class="hover:text-red-400">Changelog</a></li>
-          <li><a href="#" class="hover:text-red-400">View More</a></li>
+          <li class="text-red-600 font-semibold">Trang tiện ích</li>
+          <li><a href="#" class="hover:text-red-400">Bắt đầu tại đây</a></li>
+          <li><a href="#" class="hover:text-red-400">Hướng dẫn kiểu dáng</a></li>
+          <li><a href="#" class="hover:text-red-400">Trang bảo vệ bằng mật khẩu</a></li>
+          <li><a href="#" class="hover:text-red-400">Lỗi 404</a></li>
+          <li><a href="#" class="hover:text-red-400">Giấy phép</a></li>
+          <li><a href="#" class="hover:text-red-400">Nhật ký thay đổi</a></li>
+          <li><a href="#" class="hover:text-red-400">Xem thêm</a></li>
         </ul>
       </div>
 
-      <!-- Instagram -->
+      <!-- Phần Instagram -->
       <div>
-        <h3 class="text-red-600 font-semibold mb-3">Follow Us On Instagram</h3>
-        <div class="grid grid-cols-2 gap-3">
-          <!-- <img src="@/assets/img/pages/1.jpg" alt="Food 1" class="w-full h-20 object-cover rounded-md" />
-            <img src="@/assets/img/pages/2.jpg" alt="Food 2" class="w-full h-20 object-cover rounded-md" />
-            <img src="@/assets/img/pages/3.jpg" alt="Food 3" class="w-full h-20 object-cover rounded-md" />
-            <img src="@/assets/img/pages/4.jpg" alt="Food 4" class="w-full h-20 object-cover rounded-md" /> -->
+        <h3 class="text-red-600 font-semibold mb-3">Theo dõi chúng tôi trên Instagram</h3>
+        <div class="flex justify-center">
+          <img src="https://i.pinimg.com/736x/33/5d/46/335d46cf0a99b7cf5850ee5623c6356f.jpg" alt="logo_foodshop"
+            class="h-36 rounded-xl shadow-2xl object-cover mt-2" />
         </div>
       </div>
     </footer>
