@@ -101,3 +101,16 @@ export const deleteOrder = TryCatch(async (req, res) => {
   await order.destroy()
   res.json({ message: "Xóa đơn hàng thành công!" })
 })
+
+// Tổng doanh thu
+export const getRevenue = TryCatch(async (req, res) => {
+  // Lấy tất cả đơn hàng đã hoàn thành
+  const orders = await Order.findAll({
+    where: { status: 'completed' }
+  });
+
+  // Tính tổng doanh thu
+  const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+
+  res.json({ revenue: totalRevenue });
+})

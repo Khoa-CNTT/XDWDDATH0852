@@ -1,5 +1,5 @@
 import express from "express";
-import { cancelOrder, createOrder, deleteOrder, getAllOrders, getOrderById, getOrderByUserID, updateOrder } from "../controllers/order.controller.js";
+import { cancelOrder, createOrder, deleteOrder, getAllOrders, getOrderById, getOrderByUserID, getRevenue, updateOrder } from "../controllers/order.controller.js";
 
 const router = express.Router();
 
@@ -152,5 +152,19 @@ router.put("/cancel/:id", cancelOrder);
  *         description: Xóa đơn hàng thành công
  */
 router.delete("/delete/:id", deleteOrder);
+
+/**
+ * @swagger
+ * /api/orders/revenue:
+ *   get:
+ *     summary: Lấy tổng doanh thu của các đơn hàng đã hoàn thành
+ *     tags: [Orders]
+ *     responses:
+ *       200:
+ *         description: Trả về tổng doanh thu
+ *       500:
+ *         description: Lỗi server nội bộ
+ */
+router.get('/revenue', getRevenue)
 
 export default router;

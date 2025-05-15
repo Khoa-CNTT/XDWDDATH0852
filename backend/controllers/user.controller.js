@@ -153,7 +153,7 @@ export const forgotPassword = TryCatch(async (req, res) => {
     })
 
     // Gửi email với mã xác thực
-    const resetUrl = `https://yourdomain.com/reset-password/${token}`
+    const resetUrl = `http://localhost:5173/reset-password/${token}`
     const htmlContent = `
         <div style="font-family: Arial, sans-serif max-width: 600px margin: auto padding: 20px border: 1px solid #eee border-radius: 8px">
           <h2 style="color: #333">Yêu cầu đặt lại mật khẩu</h2>

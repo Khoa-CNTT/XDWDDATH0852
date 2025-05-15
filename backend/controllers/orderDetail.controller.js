@@ -24,7 +24,7 @@ export const getOrderDetailsByOrderId = TryCatch(async (req, res) => {
 
   const orderDetails = await OrderDetail.findAll({
     where: { order_Id: orderId },
-    include: [{ model: MenuItem, attributes: ["name", "price"] }],
+    include: [{ model: MenuItem, attributes: ["name", "img"] }],
   })
 
   if (orderDetails.length === 0) {

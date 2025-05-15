@@ -120,7 +120,7 @@ const main = async () => {
 };
 
 // Cron job mỗi phút (test)
-cron.schedule('* * * * *', main, {
+cron.schedule('* * * * * *', main, {
   scheduled: true,
   timezone: TIMEZONE,
 });
