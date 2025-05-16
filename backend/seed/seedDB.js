@@ -163,7 +163,7 @@ const seedDatabase = async () => {
         order_Id: orders[0].id,
         user_Id: users[1].id,
         total_payment: 75000,
-        method: "credit_card",
+        method: "vnpay",
         status: "success",
         transaction_id: "GD123456"
       }
