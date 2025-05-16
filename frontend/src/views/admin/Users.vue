@@ -129,9 +129,9 @@
 
             <div v-if="filteredUsers.length === 0" class="text-center py-12">
                 <i class="bx bx-group text-6xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">No users found</h3>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Không tìm thấy người dùng</h3>
                 <p class="text-gray-500">
-                    Try adjusting your search or filter to find what you're looking for.
+                    Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.
                 </p>
             </div>
         </div>
@@ -139,11 +139,11 @@
         <div class="flex justify-center mt-4" v-if="filteredUsers.length > itemsPerPage">
             <button @click="currentPage--" :disabled="currentPage === 1"
                 class="px-4 py-2 mx-1 bg-gray-200 rounded-md disabled:opacity-50">
-                Previous
+                Trước
             </button>
             <button @click="currentPage++" :disabled="currentPage * itemsPerPage >= filteredUsers.length"
                 class="px-4 py-2 mx-1 bg-gray-200 rounded-md disabled:opacity-50">
-                Next
+                Sau
             </button>
         </div>
 

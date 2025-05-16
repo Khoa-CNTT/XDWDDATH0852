@@ -122,7 +122,7 @@
                                 </button>
                                 <button @click="toggleVoucherStatus(voucher)"
                                     class="text-gray-600 hover:text-gray-900 mr-3"
-                                    :title="voucher.status === 'active' ? 'Deactivate Voucher' : 'Activate Voucher'"
+                                    :title="voucher.status === 'active' ? 'Hủy kích hoạt Voucher' : 'Kích hoạt Voucher'"
                                     :disabled="voucher.status === 'expired'"
                                     :class="{ 'opacity-50 cursor-not-allowed': voucher.status === 'expired' }">
                                     <i :class="{
@@ -143,8 +143,8 @@
             <!-- Empty State -->
             <div v-if="filteredVouchers.length === 0" class="text-center py-12">
                 <i class='bx bx-purchase-tag text-6xl text-gray-400 mb-4'></i>
-                <h3 class=" text-xl font-semibold text-gray-700 mb-2">No vouchers found</h3>
-                <p class="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                <h3 class=" text-xl font-semibold text-gray-700 mb-2">Không tìm thấy voucher nào</h3>
+                <p class="text-gray-500">Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.</p>
             </div>
         </div>
 
@@ -166,8 +166,8 @@
                                 class="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300 "
                                 required :disabled="showEditVoucherModal" />
                             <button v-if="!showEditVoucherModal" type="button" @click="generateRandomCode"
-                                class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300">
-                                Generate
+                                class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300 duration-200">
+                                Tạo mã
                             </button>
                         </div>
                     </div>
@@ -233,7 +233,7 @@
                             <label for="voucherMaxUses" class="block text-sm font-medium text-gray-700 mb-1">Sử dụng tối đa</label>
                             <input type="number" id="voucherMaxUses" v-model.number="currentVoucher.maxUses" min="0"
                                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300 " />
-                            <p class="mt-1 text-xs text-gray-500">Set to 0 for unlimited</p>
+                            <p class="mt-1 text-xs text-gray-500">Đặt thành 0 để không giới hạn</p>
                         </div>
 
                         <div>
@@ -243,7 +243,7 @@
                             <input type="number" id="voucherMaxUsesPerUser"
                                 v-model.number="currentVoucher.maxUsesPerUser" min="0"
                                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300 " />
-                            <p class="mt-1 text-xs text-gray-500">Set to 0 for unlimited</p>
+                            <p class="mt-1 text-xs text-gray-500">Đặt thành 0 để không giới hạn</p>
                         </div>
                     </div>
 
@@ -275,21 +275,19 @@
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
                 <div class="p-4 border-b">
-                    <h2 class="text-lg font-semibold">Confirm Delete</h2>
+                    <h2 class="text-lg font-semibold">Xác nhận muốn xóa ?</h2>
                 </div>
 
                 <div class="p-4">
-                    <p class="text-gray-700 mb-4">Are you sure you want to delete this voucher? This action cannot be
-                        undone.</p>
-
+                    <p class="text-gray-700 mb-4">Bạn có chắc chắn muốn xóa phiếu giảm giá này không? Hành động này không thể hoàn tác.</p>
                     <div class="flex justify-end gap-3">
                         <button @click="showDeleteModal = false"
                             class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                            Cancel
+                            Hủy
                         </button>
                         <button @click="confirmDelete"
                             class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                            Delete
+                            Xóa
                         </button>
                     </div>
                 </div>

@@ -111,10 +111,10 @@
 
         <div class="flex justify-center mt-4">
             <button :disabled="currentPage === 1" @click="currentPage--"
-                class="px-3 py-1 mx-1 border rounded-md">Previous</button>
+                class="px-3 py-1 mx-1 border rounded-md">Trước</button>
             <span>{{ currentPage }} / {{ totalPages }}</span>
             <button :disabled="currentPage === totalPages" @click="currentPage++"
-                class="px-3 py-1 mx-1 border rounded-md">Next</button>
+                class="px-3 py-1 mx-1 border rounded-md">Sau</button>
         </div>
 
         <!-- Add/Edit Product Modal -->

@@ -17,7 +17,7 @@
                                     <path
                                         d="M2 5a2 2 0 012-2h1.6a1 1 0 01.95.68l.76 2.26a1 1 0 01-.28 1.1l-1.12.94a11.05 11.05 0 005.01 5.01l.94-1.12a1 1 0 011.1-.28l2.26.76a1 1 0 01.68.95V16a2 2 0 01-2 2h-.5C6.92 18 2 13.08 2 7.5V7a2 2 0 010-.5z" />
                                 </svg>
-                                <span>033 688 0153</span>
+                                <span>012 345 6789</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -25,7 +25,7 @@
                                         d="M2.01 4.59L12 13l9.99-8.41C21.79 4.22 21.4 4 21 4H3c-.4 0-.79.22-.99.59z" />
                                     <path d="M12 15L2 6.76V20h20V6.76L12 15z" />
                                 </svg>
-                                <span>Truongvantri3@dtu.edu.vn</span>
+                                <span>foodshop@dtu.edu.vn</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <svg class="w-5 h-5 text-white mt-1" fill="currentColor" viewBox="0 0 20 20">
@@ -60,8 +60,8 @@
                     </p>
                     <router-link to="/contact">
                         <button
-                            class="bg-white text-gray-800 border border-gray-300 px-6 py-2 rounded-full hover:bg-red-800 hover:text-white">
-                            More About Us
+                            class="bg-white text-gray-800 border border-gray-300 px-6 py-2 rounded-full hover:bg-rose-600 duration-200 hover:text-white cursor-pointer">
+                            Thông tin thêm
                         </button>
                     </router-link>
                 </div>

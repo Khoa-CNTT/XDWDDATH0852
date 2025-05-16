@@ -126,18 +126,18 @@
 
             <div v-if="filteredOrders.length === 0" class="text-center py-12">
                 <i class="bx bx-shopping-bag text-6xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">No orders found</h3>
-                <p class="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Không tìm thấy đơn hàng nào</h3>
+                <p class="text-gray-500">Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.</p>
             </div>
         </div>
 
-        <div class="flex justify-center mt-4" v-if="filteredOrders.length > itemsPerPage">
-            <button @click="currentPage--" :disabled="currentPage === 1" class="px-4 py-2 mx-1 bg-gray-200 rounded-md">
-                Previous
+        <div class="flex justify-center mt-4 gap-2" v-if="filteredOrders.length > itemsPerPage">
+            <button @click="currentPage--" :disabled="currentPage === 1" class="px-4 py-2 mx-1 bg-gray-200 hover:bg-gray-300 duration-200 rounded-md cursor-pointer">
+                Trước
             </button>
             <button @click="currentPage++" :disabled="currentPage * itemsPerPage >= filteredOrders.length"
-                class="px-4 py-2 mx-1 bg-gray-200 rounded-md">
-                Next
+                class="px-4 py-2 mx-1 bg-gray-200 hover:bg-gray-300 duration-200 rounded-md cursor-pointer">
+                Sau
             </button>
         </div>
 
@@ -152,19 +152,23 @@
                 </div>
 
                 <div class="p-6">
-                    <p>Tên khách hàng: {{ selectedOrder.User.fullname }}</p>
-                    <p>Tổng tiền: {{ typeof selectedOrder.total_price === 'string' ?
+                    <p><b>Tên khách hàng:</b> {{ selectedOrder.User.fullname }}</p>
+                    <p><b>Tổng tiền:</b> {{ typeof selectedOrder.total_price === 'string' ?
                         parseFloat(selectedOrder.total_price).toLocaleString('vi-VN') : 'N/A' }} VNĐ</p>
-                    <p>Mã voucher: {{ selectedOrder.Voucher ? selectedOrder.Voucher.code : 'N/A' }}</p>
-                    <p>Trạng thái: {{ selectedOrder.status }}</p>
-                    <p>Trạng thái thanh toán: {{ selectedOrder.payment_status }}</p>
+                    <p><b>Mã voucher:</b> {{ selectedOrder.Voucher ? selectedOrder.Voucher.code : 'N/A' }}</p>
+                    <p><b>Trạng thái:</b> {{ selectedOrder.status === 'pending' ? 'Đang chờ xử lý' : 
+                        selectedOrder.status === 'processing' ? 'Đang xử lý' : 
+                        selectedOrder.status === 'shipped' ? 'Đã gửi hàng' : 
+                        selectedOrder.status === 'delivered' ? 'Đã giao hàng' : 
+                        selectedOrder.status === 'cancelled' ? 'Đã hủy' : selectedOrder.status }}</p>
+                    <p><b>Trạng thái thanh toán:</b> {{ selectedOrder.payment_status === 'paid' ? 'Đã thanh toán' : 'Đang chờ thanh toán' }}</p>
 
-                    <h3 class="text-md font-semibold mt-4">Order Items:</h3>
+                    <h3 class="text-md font-bold mt-4">Đơn hàng:</h3>
                     <ul v-if="orderDetails && orderDetails.length > 0" class="mt-2 space-y-2">
                         <li v-for="item in orderDetails" :key="item.id" class="flex items-center justify-between">
                             <span>{{ item.MenuItem.name }}</span>
                             <span class="text-gray-600">x {{ item.quantity }}</span>
-                            <span class="font-semibold">${{ parseFloat(item.subtotal).toFixed(2) }}</span>
+                            <span class="font-semibold">{{ parseFloat(item.subtotal).toLocaleString('vi-VN') }} VNĐ</span>
                         </li>
                     </ul>
                     <p v-else class="text-gray-500 mt-2">No items in this order.</p>
@@ -307,6 +311,6 @@ const printOrder = (orderId) => {
 // Xuất đơn hàng
 const exportOrders = () => {
     console.log('Exporting orders')
-    alert('Orders exported successfully')
+    alert('Xuất đơn hàng thành công!')
 };
 </script>

@@ -14,7 +14,7 @@
 
         <div v-if="loading" class="container mx-auto px-4 py-8 text-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto"></div>
-            <p class="mt-4 text-gray-600">Loading menu items...</p>
+            <p class="mt-4 text-gray-600">Loading menu...</p>
         </div>
 
         <div v-else-if="error" class="container mx-auto px-4 py-8 text-center">
@@ -55,7 +55,6 @@
                         <img v-if="product.img" :src="`${product.img}`" :alt="product.name"
                             class="w-full h-48 object-cover hover:opacity-90 transition-opacity"
                             @error="handleImageError">
-
                     </router-link>
 
                     <div class="p-4">
@@ -151,7 +150,7 @@ const filteredProducts = computed(() =>
                 product.description?.toLowerCase().includes(query)
             )
         }
-        return true
+        return product.status === 'available' // Chỉ hiển thị sản phẩm có trạng thái "available"
     })
 )
 

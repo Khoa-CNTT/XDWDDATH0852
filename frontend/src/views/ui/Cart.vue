@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-6"><i class='bx bxs-shopping-bag' ></i> My Cart</h1>
+        <h1 class="text-2xl font-bold mb-6"><i class='bx bxs-shopping-bag' ></i> Giỏ hàng của tôi</h1>
 
         <div v-if="loading" class="text-center py-12">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto"></div>

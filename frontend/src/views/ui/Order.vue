@@ -36,7 +36,8 @@
     <div v-else-if="filteredOrders.length === 0"
       class="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg">
       <h2 class="text-2xl font-bold text-gray-700 mb-2">Không có đơn hàng tìm thấy</h2>
-      <p v-if="statusFilter !== 'all'" class="text-gray-500 mb-4">Hãy thử thay đổi bộ lọc của bạn hoặc kiểm tra lại sau.</p>
+      <p v-if="statusFilter !== 'all'" class="text-gray-500 mb-4">Hãy thử thay đổi bộ lọc của bạn hoặc kiểm tra lại sau.
+      </p>
       <p v-else class="text-gray-500 mb-4">You haven't placed any orders yet.</p>
       <router-link to="/menu"
         class="bg-rose-500 hover:bg-rose-600 text-white font-medium px-6 py-2 rounded-md transition cursor-pointer">
@@ -49,7 +50,8 @@
         class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border-b border-gray-200">
           <div class="flex items-center">
-            <span class="font-bold text-gray-800 flex items-center gap-1"><i class='bx bx-package text-3xl' ></i> Đơn hàng  #{{ order.id }}</span>
+            <span class="font-bold text-gray-800 flex items-center gap-1"><i class='bx bx-package text-3xl'></i> Đơn
+              hàng #{{ order.id }}</span>
             <span class="text-gray-500 text-sm ml-2">{{ formatDate(order.created_at) }}</span>
           </div>
           <div :class="{
@@ -68,6 +70,7 @@
           <div class="text-sm">
             <span class="font-medium text-gray-700">Phương thức thanh toán:</span>
             <span class="text-gray-600 ml-1">{{ formatPaymentMethod(order.payment_method) }}</span>
+            <span class="text-gray-600 ml-1">{{ console.log(222, formatPaymentMethod(order.payment_method)) }}</span>
           </div>
         </div>
 
@@ -127,15 +130,15 @@
           'bg-rose-500 text-white hover:bg-rose-600': currentPage !== 1,
           'bg-gray-200 text-gray-500 cursor-not-allowed': currentPage === 1
         }">
-          Previous
+          Trước
         </button>
-        <span class="text-gray-700">Page {{ currentPage }} of {{ totalPages }}</span>
+        <span class="text-gray-700">Trang {{ currentPage }} / {{ totalPages }}</span>
         <button :disabled="currentPage === totalPages" @click="currentPage++" :class="{
           'px-4 py-2 rounded-md text-sm font-medium cursor-pointer transition': true,
           'bg-rose-500 text-white hover:bg-rose-600': currentPage !== totalPages,
           'bg-gray-200 text-gray-500 cursor-not-allowed': currentPage === totalPages
         }">
-          Next
+          Sau
         </button>
       </div>
     </div>
@@ -155,14 +158,14 @@
 
           <div class="p-6 overflow-y-auto max-h-[70vh]">
             <div class="mb-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-3">Order Information</h3>
+              <h3 class="text-lg font-medium text-gray-900 mb-3">Thông tin đơn hàng</h3>
               <div class="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span class="font-medium text-gray-700">Order Date:</span>
+                  <span class="font-medium text-gray-700">Ngày đặt hàng:</span>
                   <span class="text-gray-600 ml-1">{{ formatDate(selectedOrder?.created_at) }}</span>
                 </div>
                 <div>
-                  <span class="font-medium text-gray-700">Status:</span>
+                  <span class="font-medium text-gray-700">Trạng thái:</span>
                   <span :class="{
                     'ml-1 px-2 py-0.5 rounded-full text-xs font-medium': true,
                     'bg-yellow-100 text-yellow-800': selectedOrder?.status.toLowerCase() === 'pending',
@@ -175,12 +178,12 @@
                   </span>
                 </div>
                 <div>
-                  <span class="font-medium text-gray-700">Payment Method:</span>
+                  <span class="font-medium text-gray-700">Phương thức thanh toán:</span>
                   <span class="text-gray-600 ml-1">{{ formatPaymentMethod(selectedOrder?.payment_method) }}</span>
                 </div>
                 <div>
-                  <span class="font-medium text-gray-700">Shipping Address:</span>
-                  <span class="text-gray-600 ml-1">{{ selectedOrder?.shipping_address || 'Not specified' }}</span>
+                  <span class="font-medium text-gray-700">Địa chỉ giao hàng:</span>
+                  <span class="text-gray-600 ml-1">{{ selectedOrder?.shipping_address || 'Chưa xác định' }}</span>
                 </div>
               </div>
             </div>
@@ -463,10 +466,9 @@ const formatPrice = (price) => {
 
 const formatPaymentMethod = (method) => {
   if (!method) return 'Không xác định';
-
   switch (method.toLowerCase()) {
     case 'vnpay':
-      return 'VNPay';
+      return 'Thanh toán vnpay';
     case 'cashondelivery':
       return 'Thanh toán tiền mặt';
     default:

@@ -29,17 +29,16 @@
                         <tr>
                             <th @click="sortTable('name')"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                Category
+                                Danh mục
                                 <span v-if="sortColumn === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                             </th>
                             <th @click="sortTable('description')"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                Description
+                                Mô tả
                                 <span v-if="sortColumn === 'description'">{{ sortDirection === 'asc' ? '▲' : '▼'
                                     }}</span>
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Products</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                             <th @click="sortTable('id')"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
                                 ID
@@ -67,7 +66,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
-                                <div class="max-w-xs truncate">{{ category.description || 'No description' }}</div>
+                                <div class="max-w-xs truncate">{{ category.description || 'Không có mô tả' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ category.productCount }}
@@ -83,7 +82,7 @@
                                 <button @click="deleteCategory(category.id)" class="text-red-600 hover:text-red-900 cursor-pointer"
                                     :disabled="category.productCount > 0"
                                     :class="{ 'opacity-50 cursor-not-allowed': category.productCount > 0 }"
-                                    :title="category.productCount > 0 ? 'Cannot delete category with products' : 'Delete Category'">
+                                    :title="category.productCount > 0 ? 'Không thể xóa danh mục có sản phẩm' : 'Xóa danh mục'">
                                     <i class="bx bx-trash text-xl"></i>
                                 </button>
                             </td>
@@ -94,17 +93,17 @@
 
             <div v-if="filteredCategories.length === 0" class="text-center py-12">
                 <i class="bx bx-bowl-hot text-6xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">No categories found</h3>
-                <p class="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Không tìm thấy danh mục nào</h3>
+                <p class="text-gray-500">Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.</p>
             </div>
         </div>
 
         <div class="flex justify-center mt-4 gap-2">
             <button :disabled="currentPage === 1" @click="currentPage--"
-                class="px-3 py-1 border rounded disabled:opacity-50">Previous</button>
+                class="px-3 py-1 border rounded disabled:opacity-50">Trước</button>
             <span>{{ currentPage }} / {{ totalPages }}</span>
             <button :disabled="currentPage === totalPages" @click="currentPage++"
-                class="px-3 py-1 border rounded disabled:opacity-50">Next</button>
+                class="px-3 py-1 border rounded disabled:opacity-50">Sau</button>
         </div>
 
         <!-- Add / Edit Modal -->
@@ -118,8 +117,7 @@
 
                 <form @submit.prevent="showEditCategoryModal ? updateCategory() : addCategory()" class="p-4">
                     <div class="mb-4">
-                        <label for="categoryName" class="block text-sm font-medium text-gray-700 mb-1">Category
-                            Name</label>
+                        <label for="categoryName" class="block text-sm font-medium text-gray-700 mb-1">Tên danh mục</label>
                         <input type="text" id="categoryName" v-model="currentCategory.name"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300"
                             required>
@@ -127,7 +125,7 @@
 
                     <div class="mb-4">
                         <label for="categoryDescription"
-                            class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
                         <textarea id="categoryDescription" v-model="currentCategory.description" rows="3"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300"></textarea>
                     </div>
@@ -136,9 +134,7 @@
                         <label for="categoryImage" class="block text-sm font-medium text-gray-700 mb-1">Image
                             URL</label>
                         <input type="text" id="categoryImage" v-model="currentCategory.image"
-                            placeholder="https://example.com/image.jpg"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300">
-                        <p class="mt-1 text-xs text-gray-500">Leave empty to use default icon</p>
                     </div>
 
                     <div class="flex justify-end gap-3 mt-6">
