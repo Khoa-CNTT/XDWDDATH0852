@@ -3,14 +3,34 @@ import TryCatch from '../utils/trycatch.js'
 
 // Thêm đánh giá
 export const createReview = TryCatch(async (req, res) => {
-    const { user_Id, rating, comment } = req.body
+    const { user_Id, rating, comment, menuItemId, orderId } = req.body
 
     // Kiểm tra user có tồn tại không
     const user = await User.findByPk(user_Id)
     if (!user) return res.status(404).json({ message: "Người dùng không tồn tại!" })
 
-    const review = await Review.create({ user_Id, rating, comment })
-    res.status(201).json({ message: "Thêm đánh giá thành công!", review })
+    const orderDetail = await OrderDetail.findOne({
+        where: {
+            order_Id: orderId,
+            menu_item_Id: menuItemId,
+        },
+    });
+
+    if (!orderDetail) {
+        return res
+            .status(400)
+            .json({ message: "Bạn chưa mua sản phẩm này trong đơn hàng này." });
+    }
+
+    const newReview = await Review.create({
+        user_Id: userId,
+        menu_item_Id: menuItemId,
+        order_Id: orderId,
+        rating,
+        comment,
+    });
+
+    res.status(201).json({ message: "Thêm đánh giá thành công!", newReview })
 })
 
 // Lấy danh sách đánh giá

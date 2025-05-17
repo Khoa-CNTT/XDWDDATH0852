@@ -33,7 +33,7 @@ export const getOrderById = TryCatch(async (req, res) => {
   const { id } = req.params
   const order = await Order.findByPk(id, {
     include: [
-      { model: User, attributes: ["fullname", "phone_number"] },
+      { model: User, attributes: ["fullname", "phone_number", "address"] },
       { model: Voucher, attributes: ["code"] }
     ],
   })
