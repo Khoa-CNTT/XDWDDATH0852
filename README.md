@@ -16,8 +16,7 @@ Website hỗ trợ người dùng chọn món ăn nhanh chóng, đặt hàng tr�
 - 👨‍💻 Frontend: VueJS
 - 🛠 Backend: NodeJS + ExpressJS
 - 💾 Database: MySQL
-- 🔐 Xác thực: JWT
-- 💬 Chatbot AI: OpenAI API
+- 💬 Chatbot AI: AI Preny
 - 💳 Thanh toán: VNPay Integration
 
 ---
