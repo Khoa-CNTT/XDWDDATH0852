@@ -241,10 +241,11 @@ onMounted(() => {
 
     socket.value = io('http://localhost:5000');
     socket.value.on('newOrder', (order) => {
-        const localUser = JSON.parse(localStorage.getItem('user'));
-        if (localUser && localUser.role_name === 'admin') {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role_name === 'admin') {
             latestOrderId.value = order.id;
             isNewOrderNotificationVisible.value = true;
+
             setTimeout(() => {
                 isNewOrderNotificationVisible.value = false;
             }, 5000);

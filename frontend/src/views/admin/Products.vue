@@ -104,8 +104,8 @@
 
             <div v-if="filteredProducts.length === 0" class="text-center py-12">
                 <i class="bx bx-package text-6xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">No products found</h3>
-                <p class="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Không tìm thấy món nào</h3>
+                <p class="text-gray-500">Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.</p>
             </div>
         </div>
 

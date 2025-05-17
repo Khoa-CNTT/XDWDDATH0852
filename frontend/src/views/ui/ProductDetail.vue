@@ -72,29 +72,30 @@
 
                         <div v-else-if="reviewsError" class="text-red-500 text-sm mb-4">{{ reviewsError }}</div>
 
-                        <div v-else-if="reviewData?.reviews?.length">
+                        <div v-else-if="reviewData.reviews?.length">
+                            <p>{{ console.log('reviewData', reviewData) }}</p>
                             <div class="flex items-center mb-3" v-if="!isNaN(reviewData.averageRating)">
                                 <div class="flex text-yellow-400">
-                                    <i class='bx bx-star h-5 w-5 fill-current'
+                                    <i class='bx bxs-star h-5 w-5 fill-current'
                                         v-for="i in Math.round(reviewData.averageRating)" :key="`avg-star-${i}`"></i>
                                     <i class='bx bx-star h-5 w-5' v-for="i in 5 - Math.round(reviewData.averageRating)"
                                         :key="`avg-star-empty-${i}`"></i>
                                 </div>
                                 <span class="ml-2 text-gray-600 text-sm">{{
-                                    parseFloat(reviewData.averageRating).toFixed(1) }} out of 5</span>
+                                    parseFloat(reviewData.averageRating).toFixed(1) }} trên 5.0</span>
                             </div>
-                            <p class="text-gray-500 text-sm mb-4">Based on {{ reviewData.reviews.length }} review(s)</p>
+                            <p class="text-gray-500 text-sm mb-4">Dựa trên {{ reviewData.reviews.length }} đánh giá ({{ reviewData.reviews.length }})</p>
 
                             <div v-for="review in reviewData.reviews" :key="review.id"
                                 class="mb-6 border-b border-gray-200 pb-4">
                                 <div class="flex items-center mb-2">
                                     <div class="flex text-yellow-400">
-                                        <i class='bx bx-star h-4 w-4 fill-current'
+                                        <i class='bx bxs-star h-4 w-4 fill-current'
                                             v-for="i in Math.round(review.rating)" :key="`star-${review.id}-${i}`"></i>
                                         <i class='bx bx-star h-4 w-4' v-for="i in 5 - Math.round(review.rating)"
                                             :key="`star-empty-${review.id}-${i}`"></i>
                                     </div>
-                                    <span class="ml-2 text-gray-500 text-xs">By: {{ review.User?.fullname || 'Unknown'
+                                    <span class="ml-2 text-gray-500 text-xs">Bởi: {{ review.User?.fullname || 'Unknown'
                                     }}</span>
                                 </div>
                                 <p class="text-gray-700 text-sm">{{ review.comment }}</p>
@@ -102,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div v-else class="text-gray-500 text-sm">No reviews yet for this product.</div>
+                        <div v-else class="text-gray-500 text-sm">Chưa có đánh giá nào cho sản phẩm này.</div>
                     </div>
                 </div>
             </div>
@@ -162,7 +163,11 @@ onMounted(async () => {
             categories.value = categoriesRes.value.data
         }
         if (reviewRes.status === 'fulfilled') {
-            reviewData.value = reviewRes.value.data
+            const data = reviewRes.value.data
+            reviewData.value = {
+                averageRating: parseFloat(data.rating || 0),
+                reviews: [data]
+            }
         } else {
             reviewData.value = { averageRating: 0, reviews: [] }
         }
@@ -206,7 +211,14 @@ const addToCart = async () => {
 };
 
 const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }
-    return new Date(dateString).toLocaleDateString(undefined, options)
+    const date = new Date(dateString)
+
+    const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' }
+    const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false }
+
+    const formattedDate = date.toLocaleDateString('vi-VN', optionsDate)
+    const formattedTime = date.toLocaleTimeString('vi-VN', optionsTime)
+
+    return `${formattedDate} lúc ${formattedTime}`
 };
 </script>

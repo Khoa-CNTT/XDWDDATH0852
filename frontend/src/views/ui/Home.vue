@@ -3,7 +3,6 @@
     <PromotionBanner />
     <HeroSection />
     <FastFood />
-    <ChefRecommendation />
     <AboutHome />
     <CustomerReviews />
     <BlogHome />

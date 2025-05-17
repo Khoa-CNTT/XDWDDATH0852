@@ -61,6 +61,7 @@
           <img src="https://i.pinimg.com/736x/33/5d/46/335d46cf0a99b7cf5850ee5623c6356f.jpg" alt="logo_foodshop"
             class="h-36 rounded-xl shadow-2xl object-cover mt-2" />
         </div>
+        <div id="preny-chatbot-container"></div>
       </div>
     </footer>
   </div>

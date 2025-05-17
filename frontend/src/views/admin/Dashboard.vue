@@ -116,10 +116,10 @@
                 <h3 class="text-sm font-medium text-gray-900">{{ product.name }}</h3>
                 <p class="text-sm text-gray-500">{{ product.price.toLocaleString('vi-VN') }} VNĐ</p>
               </div>
-              <div class="text-right">
+              <!-- <div class="text-right">
                 <p class="text-sm font-medium text-gray-900">{{ product.sales }} lượt bán</p>
                 <p class="text-xs text-gray-500">{{ product.revenue }}</p>
-              </div>
+              </div> -->
             </div>
           </li>
         </ul>

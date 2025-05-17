@@ -88,7 +88,7 @@
                 </div>
                 <button @click="openReviewForm(item)"
                   class="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded transition cursor-pointer">
-                  Xóa dánh giá
+                  Đánh giá
                 </button>
               </div>
             </div>
@@ -146,11 +146,11 @@
     <!-- Order Details Modal -->
     <div v-if="showOrderModal" class="fixed inset-0 z-50 overflow-y-auto" @click="closeOrderModal">
       <div class="flex items-center justify-center min-h-screen px-4">
-        <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full"
+        <div class="fixed inset-0 bg-gray-200 bg-opacity-70 transition-opacity z-40"></div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full z-50"
           @click.stop>
           <div class="flex justify-between items-center p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Order Details #{{ selectedOrder?.id }}</h2>
+            <h2 class="text-xl font-bold text-gray-800">Chi tiết đơn hàng #{{ selectedOrder?.id }}</h2>
             <button class="text-gray-500 hover:text-gray-700 focus:outline-none" @click="closeOrderModal">
               <span class="text-2xl">&times;</span>
             </button>
@@ -174,7 +174,7 @@
                     'bg-green-100 text-green-800': selectedOrder?.status.toLowerCase() === 'delivered',
                     'bg-red-100 text-red-800': selectedOrder?.status.toLowerCase() === 'cancelled'
                   }">
-                    {{ capitalizeFirstLetter(selectedOrder?.status) }}
+                    {{ translateStatus(selectedOrder?.status) }}
                   </span>
                 </div>
                 <div>
@@ -189,7 +189,7 @@
             </div>
 
             <div class="mb-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-3">Order Items</h3>
+              <h3 class="text-lg font-medium text-gray-900 mb-3">Các món đã đặt:</h3>
               <div class="space-y-4">
                 <div v-for="(item, index) in selectedOrder?.OrderDetails" :key="index"
                   class="flex border border-gray-200 rounded-lg overflow-hidden">
@@ -198,12 +198,11 @@
                   </div>
                   <div class="flex-1 p-4">
                     <h4 class="font-medium text-gray-900">{{ item.MenuItem.name }}</h4>
-                    <p class="text-sm text-gray-500 mt-1">{{ item.MenuItem.description || 'No description available' }}
+                    <p class="text-sm text-gray-500 mt-1">{{ item.MenuItem.description || 'No description' }}
                     </p>
                     <div class="mt-2 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
-                      <span>${{ formatPrice(item.price) }}</span>
-                      <span>Quantity: {{ item.quantity }}</span>
-                      <span>Subtotal: ${{ formatPrice(item.price * item.quantity) }}</span>
+                      <span>{{ formatPrice(item.price) }} VNĐ</span>
+                      <span>Số lượng: {{ item.quantity }}</span>
                     </div>
                   </div>
                 </div>
@@ -211,23 +210,19 @@
             </div>
 
             <div>
-              <h3 class="text-lg font-medium text-gray-900 mb-3">Order Summary</h3>
+              <h3 class="text-lg font-medium text-gray-900 mb-3">Tóm tắt đơn hàng</h3>
               <div class="bg-gray-50 p-4 rounded-lg">
                 <div class="flex justify-between py-1 text-sm">
-                  <span class="text-gray-600">Subtotal:</span>
-                  <span class="text-gray-800">${{ formatPrice(calculateSubtotal(selectedOrder)) }}</span>
+                  <span class="text-gray-600">Tổng tiền:</span>
+                  <span class="text-gray-800">{{ formatPrice(calculateSubtotal(selectedOrder)) }} VNĐ</span>
                 </div>
                 <div class="flex justify-between py-1 text-sm">
-                  <span class="text-gray-600">Shipping Fee:</span>
-                  <span class="text-gray-800">${{ formatPrice(selectedOrder?.shipping_fee) }}</span>
-                </div>
-                <div class="flex justify-between py-1 text-sm">
-                  <span class="text-gray-600">Tax:</span>
-                  <span class="text-gray-800">${{ formatPrice(selectedOrder?.tax) }}</span>
+                  <span class="text-gray-600">Tiền ship:</span>
+                  <span class="text-gray-800">30.000 VNĐ</span>
                 </div>
                 <div class="flex justify-between py-1 font-bold">
-                  <span>Total:</span>
-                  <span>${{ formatPrice(selectedOrder?.total_price) }}</span>
+                  <span>Tổng tiền thanh toán:</span>
+                  <span>{{ formatPrice(selectedOrder?.total_price) }} VNĐ</span>
                 </div>
               </div>
             </div>
@@ -235,14 +230,14 @@
 
           <div class="bg-gray-50 px-4 py-3 flex flex-col-reverse sm:flex-row gap-3 justify-end">
             <button
-              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition duration-200 cursor-pointer"
               @click="closeOrderModal">
-              Close
+              Đóng
             </button>
             <button v-if="canCancelOrder(selectedOrder)"
-              class="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 transition"
+              class="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 transition duration-200 cursor-pointer"
               @click="cancelOrderFromModal(selectedOrder.id)">
-              Cancel Order
+              Hủy đơn hàng
             </button>
           </div>
         </div>
@@ -252,46 +247,51 @@
     <!-- Review Modal -->
     <div v-if="showReviewForm" class="fixed inset-0 z-50 overflow-y-auto" @click="closeReviewForm">
       <div class="flex items-center justify-center min-h-screen px-4">
-        <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full" @click.stop>
+        <div class="fixed inset-0 bg-gray-200 bg-opacity-70 transition-opacity z-40"></div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full z-50"
+          @click.stop>
           <div class="flex justify-between items-center p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Leave a Review</h2>
+            <h2 class="text-xl font-bold text-gray-800">Đánh giá sản phẩm</h2>
             <button class="text-gray-500 hover:text-gray-700 focus:outline-none" @click="closeReviewForm">
               <span class="text-2xl">&times;</span>
             </button>
           </div>
-
           <div class="p-6">
-            <div class="mb-4">
-              <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">Rating:</label>
-              <select id="rating" v-model="reviewData.rating"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="1">1 Star</option>
-                <option value="2">2 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="5" selected>5 Stars</option>
-              </select>
+            <div v-if="reviewingOrderItem">
+              <div class="mb-2 font-semibold text-gray-700">
+                Sản phẩm: {{ reviewingOrderItem.MenuItem?.name || 'Không xác định' }}
+              </div>
+              <div class="mb-4">
+                <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">Số sao:</label>
+                <select id="rating" v-model="reviewData.rating"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 cursor-pointer">
+                  <option value="1">1 Sao</option>
+                  <option value="2">2 Sao</option>
+                  <option value="3">3 Sao</option>
+                  <option value="4">4 Sao</option>
+                  <option value="5" selected>5 Sao</option>
+                </select>
+              </div>
+              <div class="mb-6">
+                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Nhận xét (comment):</label>
+                <textarea id="comment" v-model="reviewData.comment" rows="5"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                  placeholder="Nhập nhận xét của bạn về sản phẩm..."></textarea>
+              </div>
+              <div class="flex justify-end gap-3">
+                <button
+                  class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition duration-200 cursor-pointer"
+                  @click="closeReviewForm">
+                  Hủy
+                </button>
+                <button
+                  class="px-4 py-2 bg-rose-500 text-white rounded-md text-sm font-medium hover:bg-rose-600 transition duration-200 cursor-pointer"
+                  @click="submitReview">
+                  Gửi đánh giá
+                </button>
+              </div>
             </div>
-
-            <div class="mb-6">
-              <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Comment:</label>
-              <textarea id="comment" v-model="reviewData.comment" rows="5"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-            </div>
-
-            <div class="flex justify-end gap-3">
-              <button
-                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition"
-                @click="closeReviewForm">
-                Cancel
-              </button>
-              <button
-                class="px-4 py-2 bg-green-500 text-white rounded-md text-sm font-medium hover:bg-green-600 transition"
-                @click="submitReview">
-                Submit Review
-              </button>
-            </div>
+            <div v-else class="text-red-500 font-semibold">Không có dữ liệu sản phẩm để đánh giá!</div>
           </div>
         </div>
       </div>
@@ -457,7 +457,6 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
-
 const formatPrice = (price) => {
   const numericPrice = Number(price);
   if (isNaN(numericPrice)) return '0.00';
@@ -490,6 +489,23 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+const translateStatus = (status) => {
+  switch (status) {
+    case 'pending':
+      return 'Đang chờ';
+    case 'confirmed':
+      return 'Đã xác nhận';
+    case 'processing':
+      return 'Đang xử lý';
+    case 'delivered':
+      return 'Đã giao hàng';
+    case 'cancelled':
+      return 'Đã hủy';
+    default:
+      return 'Không xác định';
+  }
+}
+
 const getStatusLabel = (status) => {
   const map = {
     pending: 'Chờ xác nhận',
@@ -509,6 +525,7 @@ const canCancelOrder = (order) => {
 // Modal functions
 const viewOrderDetails = async (order) => {
   selectedOrder.value = order;
+  console.log('selectedOrder.value', selectedOrder.value);
 
   // Fetch payment info if not already loaded
   if (!order.payment_method) {
@@ -528,10 +545,10 @@ const viewOrderDetails = async (order) => {
     try {
       const orderResponse = await orderAPI.getOrderById(order.id);
       if (orderResponse && orderResponse.data) {
-        selectedOrder.value.shipping_address = orderResponse.data.shipping_address;
-        selectedOrder.value.full_name = orderResponse.data.full_name;
-        selectedOrder.value.phone_number = orderResponse.data.phone_number;
-        selectedOrder.value.email = orderResponse.data.email;
+        selectedOrder.value.shipping_address = orderResponse.data.User.address;
+        selectedOrder.value.full_name = orderResponse.data.User.full_name;
+        selectedOrder.value.phone_number = orderResponse.data.User.phone_number;
+        selectedOrder.value.email = orderResponse.data.User.email;
       }
     } catch (err) {
       console.error('Error fetching order details:', err);
@@ -593,7 +610,7 @@ const submitReview = async () => {
     return;
   }
   try {
-    const response = await axios.post('http://localhost:5000/api/reviews/reviews', {
+    const response = await axios.post('http://localhost:5000/api/review/create', {
       menuItemId: reviewingOrderItem.value.menu_item_Id,
       orderId: reviewingOrderItem.value.order_Id,
       rating: reviewData.value.rating,
