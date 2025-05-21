@@ -1,36 +1,36 @@
-import { Review, User } from "../models/index.js"
+import { OrderDetail, Review, User } from "../models/index.js"
 import TryCatch from '../utils/trycatch.js'
 
 // Thêm đánh giá
 export const createReview = TryCatch(async (req, res) => {
-    const { user_Id, rating, comment, menuItemId, orderId } = req.body
+    try {
+        const { menuItemId, orderId, rating, comment, userId } = req.body
+        const orderDetail = await OrderDetail.findOne({
+            where: {
+                order_Id: orderId,
+                menu_item_Id: menuItemId,
+            },
+        })
 
-    // Kiểm tra user có tồn tại không
-    const user = await User.findByPk(user_Id)
-    if (!user) return res.status(404).json({ message: "Người dùng không tồn tại!" })
+        if (!orderDetail) {
+            return res
+                .status(400)
+                .json({ message: "Bạn chưa mua sản phẩm này trong đơn hàng này." })
+        }
 
-    const orderDetail = await OrderDetail.findOne({
-        where: {
-            order_Id: orderId,
+        const newReview = await Review.create({
+            user_Id: userId,
             menu_item_Id: menuItemId,
-        },
-    });
+            order_Id: orderId,
+            rating,
+            comment,
+        })
 
-    if (!orderDetail) {
-        return res
-            .status(400)
-            .json({ message: "Bạn chưa mua sản phẩm này trong đơn hàng này." });
+        res.status(201).json(newReview)
+    } catch (error) {
+        console.error("Lỗi khi tạo đánh giá:", error)
+        res.status(500).json({ message: "Đã có lỗi xảy ra khi tạo đánh giá." })
     }
-
-    const newReview = await Review.create({
-        user_Id: userId,
-        menu_item_Id: menuItemId,
-        order_Id: orderId,
-        rating,
-        comment,
-    });
-
-    res.status(201).json({ message: "Thêm đánh giá thành công!", newReview })
 })
 
 // Lấy danh sách đánh giá
@@ -78,4 +78,35 @@ export const deleteReview = TryCatch(async (req, res) => {
 
     await review.destroy()
     res.status(200).json({ message: "Xóa đánh giá thành công!" })
+})
+
+
+export const getReviewByProductID = TryCatch(async (req, res) => {
+    try {
+        const menuItemId = req.params.id
+
+        const reviews = await Review.findAll({
+            where: { menu_item_Id: menuItemId },
+            include: [
+                {
+                    model: User,
+                    attributes: ["fullname"],
+                },
+            ],
+            order: [["created_at", "DESC"]],
+        })
+
+        const totalRating = reviews.reduce(
+            (sum, review) => sum + parseFloat(review.rating),
+            0
+        )
+        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0
+
+        res.status(200).json({ averageRating, reviews })
+    } catch (error) {
+        console.error("Lỗi khi lấy đánh giá sản phẩm:", error)
+        res
+            .status(500)
+            .json({ message: "Đã có lỗi xảy ra khi lấy đánh giá sản phẩm." })
+    }
 })

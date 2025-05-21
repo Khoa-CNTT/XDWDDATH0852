@@ -39,7 +39,7 @@ const seedDatabase = async () => {
       User.create({
         email: "admin@example.com",
         phone_number: "0987654321",
-        password: await bcrypt.hash("123456", 10),
+        password: await bcrypt.hash("12345678", 10),
         fullname: "Admin",
         address: "Hà Nội",
         role_name: "admin"
@@ -47,19 +47,35 @@ const seedDatabase = async () => {
       User.create({
         email: "huuthuytrann3004@gmail.com",
         phone_number: "0943752093",
-        password: await bcrypt.hash("1234567", 10),
+        password: await bcrypt.hash("12345678", 10),
         fullname: "Trần Hữu Thủy",
-        address: "Đà Nẵng",
+        address: "345 Nguyễn Tất Thành, Tp.Đà Nẵng",
         role_name: "customer"
       }),
       User.create({
-        email: "maiquangvu@gmail.com",
+        email: "maiquangvu2306@gmail.com",
         phone_number: "0912345678",
-        password: await bcrypt.hash("abcdef", 10),
+        password: await bcrypt.hash("12345678", 10),
         fullname: "Mai Quang Vũ",
-        address: "Đà Nẵng",
+        address: "279 Ngô Tất Tố, Tp.Đà Nẵng",
         role_name: "customer"
-      })
+      }),
+      User.create({
+        email: "xuannampham2001@gmail.com",
+        phone_number: "0911222333",
+        password: await bcrypt.hash("12345678", 10),
+        fullname: "Phạm Xuân Nam",
+        address: "174 Tiểu La, Tp.Đà Nẵng",
+        role_name: "customer"
+      }),
+      User.create({
+        email: "tritruongvan189@gmail.com",
+        phone_number: "0902345678",
+        password: await bcrypt.hash("12345678", 10),
+        fullname: "Trương Văn Trí",
+        address: "333 Trần Hưng Đạo, Tp.Đà Nẵng",
+        role_name: "customer"
+      }),
     ])
     console.log("✅ Users created!")
 
@@ -131,7 +147,7 @@ const seedDatabase = async () => {
         code: "FREESHIP",
         description: "Miễn phí vận chuyển cho đơn từ 50.000đ",
         discount_type: "flat",
-        discount_value: 15000,
+        discount_value: 30000,
         min_order_amount: 50000,
         max_discount: null,
         start_date: new Date(),
@@ -145,7 +161,9 @@ const seedDatabase = async () => {
     // Orders
     const orders = await Order.bulkCreate([
       { user_Id: users[1].id, total_price: 75000, voucher_Id: vouchers[0].id, status: "confirmed", payment_status: "paid" },
-      { user_Id: users[2].id, total_price: 105000, voucher_Id: vouchers[1].id, status: "pending", payment_status: "unpaid" }
+      { user_Id: users[2].id, total_price: 225000, voucher_Id: vouchers[0].id, status: "confirmed", payment_status: "paid" },
+      { user_Id: users[3].id, total_price: 105000, voucher_Id: vouchers[1].id, status: "pending", payment_status: "unpaid" },
+      { user_Id: users[4].id, total_price: 100000, voucher_Id: vouchers[1].id, status: "pending", payment_status: "unpaid" },
     ])
     console.log("✅ Orders created!")
 
@@ -172,8 +190,8 @@ const seedDatabase = async () => {
 
     // Reviews
     await Review.bulkCreate([
-      { user_Id: users[1].id, rating: 5, comment: "Món ăn rất ngon, phục vụ nhanh!" },
-      { user_Id: users[2].id, rating: 4, comment: "Tạm ổn, cần cải thiện thêm phần giao hàng!" }
+      { user_Id: users[1].id, rating: 5, comment: "Món ăn rất ngon, phục vụ nhanh!", menu_item_Id: menuItems[0].id },
+      { user_Id: users[2].id, rating: 4, comment: "Tạm ổn, cần cải thiện thêm phần giao hàng!", menu_item_Id: menuItems[3].id }
     ])
     console.log("✅ Reviews created!")
 

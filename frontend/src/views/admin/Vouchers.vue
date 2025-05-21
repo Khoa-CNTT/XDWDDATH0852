@@ -166,7 +166,7 @@
                                 class="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300 "
                                 required :disabled="showEditVoucherModal" />
                             <button v-if="!showEditVoucherModal" type="button" @click="generateRandomCode"
-                                class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300 duration-200">
+                                class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300 duration-200 cursor-pointer">
                                 Tạo mã
                             </button>
                         </div>
@@ -209,7 +209,6 @@
                         <input type="number" id="voucherMinOrderValue" v-model.number="currentVoucher.minOrderValue"
                             min="0" step="0.01"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300 " />
-                        <p class="mt-1 text-xs text-gray-500">Set to 0 for no minimum</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -259,10 +258,10 @@
 
                     <div class="flex justify-end gap-3 mt-6">
                         <button type="button" @click="closeVoucherModal"
-                            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 cursor-pointer">
                             Hủy
                         </button>
-                        <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700">
+                        <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 cursor-pointer">
                             {{ showEditVoucherModal ? 'Cập nhật' : 'Tạo' }}
                         </button>
                     </div>

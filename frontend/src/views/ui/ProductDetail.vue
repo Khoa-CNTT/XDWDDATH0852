@@ -24,7 +24,7 @@
                             </span>
                         </div>
                         <span class="text-2xl font-bold text-rose-600">{{ Number(product.price).toLocaleString('vi-VN')
-                            }} VNĐ</span>
+                        }} VNĐ</span>
                     </div>
 
                     <div class="mb-6">
@@ -73,30 +73,32 @@
                         <div v-else-if="reviewsError" class="text-red-500 text-sm mb-4">{{ reviewsError }}</div>
 
                         <div v-else-if="reviewData.reviews?.length">
-                            <p>{{ console.log('reviewData', reviewData) }}</p>
                             <div class="flex items-center mb-3" v-if="!isNaN(reviewData.averageRating)">
                                 <div class="flex text-yellow-400">
                                     <i class='bx bxs-star h-5 w-5 fill-current'
-                                        v-for="i in Math.round(reviewData.averageRating)" :key="`avg-star-${i}`"></i>
-                                    <i class='bx bx-star h-5 w-5' v-for="i in 5 - Math.round(reviewData.averageRating)"
+                                        v-for="i in getStarCount(reviewData.averageRating)" :key="`avg-star-${i}`"></i>
+                                    <i class='bx bx-star h-5 w-5'
+                                        v-for="i in 5 - getStarCount(reviewData.averageRating)"
                                         :key="`avg-star-empty-${i}`"></i>
                                 </div>
                                 <span class="ml-2 text-gray-600 text-sm">{{
                                     parseFloat(reviewData.averageRating).toFixed(1) }} trên 5.0</span>
                             </div>
-                            <p class="text-gray-500 text-sm mb-4">Dựa trên {{ reviewData.reviews.length }} đánh giá ({{ reviewData.reviews.length }})</p>
+                            <p class="text-gray-500 text-sm mb-4">Dựa trên {{ reviewData.reviews.length }} đánh giá ({{
+                                reviewData.reviews.length }})</p>
 
                             <div v-for="review in reviewData.reviews" :key="review.id"
                                 class="mb-6 border-b border-gray-200 pb-4">
                                 <div class="flex items-center mb-2">
                                     <div class="flex text-yellow-400">
                                         <i class='bx bxs-star h-4 w-4 fill-current'
-                                            v-for="i in Math.round(review.rating)" :key="`star-${review.id}-${i}`"></i>
-                                        <i class='bx bx-star h-4 w-4' v-for="i in 5 - Math.round(review.rating)"
+                                            v-for="i in getStarCount(review.rating)"
+                                            :key="`star-${review.id}-${i}`"></i>
+                                        <i class='bx bx-star h-4 w-4' v-for="i in 5 - getStarCount(review.rating)"
                                             :key="`star-empty-${review.id}-${i}`"></i>
                                     </div>
                                     <span class="ml-2 text-gray-500 text-xs">Bởi: {{ review.User?.fullname || 'Unknown'
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <p class="text-gray-700 text-sm">{{ review.comment }}</p>
                                 <p class="text-gray-500 text-xs mt-1">{{ formatDate(review.created_at) }}</p>
@@ -156,7 +158,7 @@ onMounted(async () => {
         // Nếu có sản phẩm, mới gọi tiếp các API còn lại
         const [categoriesRes, reviewRes] = await Promise.allSettled([
             categoryAPI.getAll(),
-            reviewAPI.getByMenuItemId(productId)
+            reviewAPI.getReviewByProductId(product.value.id),
         ])
 
         if (categoriesRes.status === 'fulfilled') {
@@ -165,8 +167,8 @@ onMounted(async () => {
         if (reviewRes.status === 'fulfilled') {
             const data = reviewRes.value.data
             reviewData.value = {
-                averageRating: parseFloat(data.rating || 0),
-                reviews: [data]
+                averageRating: parseFloat(data.averageRating || 0),
+                reviews: data.reviews || [],
             }
         } else {
             reviewData.value = { averageRating: 0, reviews: [] }
@@ -220,5 +222,10 @@ const formatDate = (dateString) => {
     const formattedTime = date.toLocaleTimeString('vi-VN', optionsTime)
 
     return `${formattedDate} lúc ${formattedTime}`
+};
+
+const getStarCount = (rating) => {
+    const rounded = Math.round(parseFloat(rating))
+    return isNaN(rounded) ? 0 : rounded
 };
 </script>

@@ -58,7 +58,7 @@
                         lần ghé thăm thành
                         một sự kiện khó quên.
                     </p>
-                    <router-link to="/contact">
+                    <router-link to="/about">
                         <button
                             class="bg-white text-gray-800 border border-gray-300 px-6 py-2 rounded-full hover:bg-rose-600 duration-200 hover:text-white cursor-pointer">
                             Thông tin thêm

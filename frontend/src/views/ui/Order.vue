@@ -9,6 +9,7 @@
           <option value="processing">Đang xử lý</option>
           <option value="shipped">Đã gửi hàng</option>
           <option value="delivered">Đã giao hàng</option>
+          <option value="confirmed">Đã xác nhận</option>
           <option value="cancelled">Đã hủy</option>
         </select>
         <select v-model="sortBy" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-700">
@@ -60,7 +61,8 @@
             'bg-blue-100 text-blue-800': order.status.toLowerCase() === 'processing',
             'bg-indigo-100 text-indigo-800': order.status.toLowerCase() === 'shipped',
             'bg-green-100 text-green-800': order.status.toLowerCase() === 'delivered',
-            'bg-red-100 text-red-800': order.status.toLowerCase() === 'cancelled'
+            'bg-green-100 text-green-800': order.status.toLowerCase() === 'confirmed',
+            'bg-red-100 text-red-800': order.status.toLowerCase() === 'cancelled',
           }">
             {{ getStatusLabel(order.status) }}
           </div>
@@ -70,7 +72,6 @@
           <div class="text-sm">
             <span class="font-medium text-gray-700">Phương thức thanh toán:</span>
             <span class="text-gray-600 ml-1">{{ formatPaymentMethod(order.payment_method) }}</span>
-            <span class="text-gray-600 ml-1">{{ console.log(222, formatPaymentMethod(order.payment_method)) }}</span>
           </div>
         </div>
 
@@ -251,7 +252,7 @@
         <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full z-50"
           @click.stop>
           <div class="flex justify-between items-center p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Đánh giá sản phẩm</h2>
+            <h2 class="text-xl font-bold text-gray-800">Đánh giá món ăn</h2>
             <button class="text-gray-500 hover:text-gray-700 focus:outline-none" @click="closeReviewForm">
               <span class="text-2xl">&times;</span>
             </button>
@@ -273,7 +274,7 @@
                 </select>
               </div>
               <div class="mb-6">
-                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Nhận xét (comment):</label>
+                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Bình luận (nhận xét):</label>
                 <textarea id="comment" v-model="reviewData.comment" rows="5"
                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                   placeholder="Nhập nhận xét của bạn về sản phẩm..."></textarea>
@@ -341,40 +342,38 @@ const fetchOrders = async () => {
     loading.value = true;
     error.value = null;
     const response = await orderAPI.getOrderByUserID(user.id);
-    // console.log('API Response:', response);
 
-    // Check response and assign data
     if (response && Array.isArray(response)) {
       orders.value = response;
     } else if (response && response.data && Array.isArray(response.data)) {
       orders.value = response.data;
     } else {
       orders.value = [];
-      console.warn('No orders found or invalid response format');
+      // console.warn('No orders found or invalid response format');
     }
 
-    // Fetch order details and payment info for each order
     for (let order of orders.value) {
       try {
         // Fetch order details
         const detailsResponse = await orderAPI.getOrderDetails(order.id);
-        console.log('Order Details Response:', detailsResponse);
-
         if (detailsResponse && detailsResponse.data) {
           order.OrderDetails = detailsResponse.data;
-          // Log details for each item in order
-          order.OrderDetails.forEach((item, index) => {
-            console.log(`Order Item ${index}:`, item);
-            console.log(`MenuItem ${index}:`, item.MenuItem);
-            console.log(`Image path ${index}:`, item.MenuItem?.img);
-          });
         }
 
         // Fetch payment info
-        const paymentResponse = await paymentAPI.getPaymentByOrderId(order.id);
-        if (paymentResponse && paymentResponse.data) {
-          order.payment_method = paymentResponse.data.method;
-          order.payment_status = paymentResponse.data.status;
+        try {
+          const paymentResponse = await paymentAPI.getPaymentByOrderId(order.id);
+          if (paymentResponse && paymentResponse.data) {
+            order.payment_method = paymentResponse.data.method || 'Không xác định';
+            order.payment_status = paymentResponse.data.status || 'pending';
+          } else {
+            order.payment_method = 'Không xác định';
+            order.payment_status = 'pending';
+          }
+        } catch (paymentError) {
+          console.error('Error fetching payment info for order', order.id, paymentError);
+          order.payment_method = 'Không xác định';
+          order.payment_status = 'pending';
         }
 
         // Fetch full order details
@@ -386,7 +385,7 @@ const fetchOrders = async () => {
           order.email = orderResponse.data.email;
         }
       } catch (err) {
-        console.error('Error fetching order details or payment:', err);
+        console.error('Error fetching order details for order', order.id, err);
       }
     }
   } catch (err) {
@@ -397,7 +396,6 @@ const fetchOrders = async () => {
     loading.value = false;
   }
 };
-
 // Filter and sort orders
 const filteredOrders = computed(() => {
   let result = [...orders.value];
@@ -512,10 +510,11 @@ const getStatusLabel = (status) => {
     processing: 'Đang xử lý',
     shipped: 'Đã gửi hàng',
     delivered: 'Đã giao hàng',
-    cancelled: 'Đã hủy'
-  }
-  return map[status.toLowerCase()] || status
-}
+    confirmed: 'Đã xác nhận',
+    cancelled: 'Đã hủy',
+  };
+  return map[status.toLowerCase()] || status;
+};
 
 const canCancelOrder = (order) => {
   if (!order) return false;

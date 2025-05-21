@@ -40,7 +40,6 @@ const startServer = async () => {
             console.log(`🚀 Server is running on http://localhost:${PORT}`)
             console.log('📌 API Docs at: http://localhost:5000/api-docs')
             initializeSocketIO(server)
-            console.log('🔌 Socket.IO initialized!')
         })
     } catch (error) {
         console.error("❌ Server failed to start:", error)

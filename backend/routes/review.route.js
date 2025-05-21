@@ -1,5 +1,5 @@
 import express from "express"
-import { createReview, getReviews, getReviewById, updateReview, deleteReview } from "../controllers/review.controller.js"
+import { createReview, getReviews, getReviewById, updateReview, deleteReview, getReviewByProductID } from "../controllers/review.controller.js"
 
 const router = express.Router()
 
@@ -111,5 +111,58 @@ router.put("/update/:id", updateReview)
  *         description: Xóa thành công
  */
 router.delete("/delete/:id", deleteReview)
+
+/**
+ * @swagger
+ * /api/review/getByProductID/{id}:
+ *   get:
+ *     summary: Lấy danh sách đánh giá và điểm trung bình theo ID sản phẩm
+ *     tags: [Review]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của sản phẩm (menu item)
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách đánh giá thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 averageRating:
+ *                   type: number
+ *                   description: Điểm đánh giá trung bình
+ *                   example: 5.0
+ *                 reviews:
+ *                   type: array
+ *                   description: Danh sách các đánh giá
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       rating:
+ *                         type: number
+ *                       comment:
+ *                         type: string
+ *                       created_at:
+ *                         type: string
+ *                         format: date-time
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           fullname:
+ *                             type: string
+ *                             example: Nguyễn Văn A
+ *       404:
+ *         description: Không tìm thấy sản phẩm
+ *       500:
+ *         description: Lỗi server
+ */
+router.get("/getByProductID/:id", getReviewByProductID);
 
 export default router

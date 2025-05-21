@@ -63,8 +63,7 @@ export const paymentAPI = {
 };
 
 export const reviewAPI = {
-  getByMenuItemId: (productId) => api.get(`/review/get/${productId}`),
-  
+  getReviewByProductId: (productId) => api.get(`/review/getByProductID/${productId}`),
 };
 
 export default api; 

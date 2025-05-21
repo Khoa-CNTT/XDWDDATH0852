@@ -64,7 +64,7 @@
             Instagram
           </a>
           <a
-            href="https://facebook.com/foodshop"
+            href="http://www.foodshop.com/"
             target="_blank"
             class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition flex items-center gap-2"
           >

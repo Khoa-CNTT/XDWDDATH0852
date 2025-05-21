@@ -8,9 +8,14 @@ import { sendMail } from "../utils/sendMail.js"
 export const registerController = TryCatch(async (req, res) => {
     const { phone_number, password, email, fullname, address, role_name } = req.body
 
-    const existingUser = await User.findOne({ where: { phone_number } })
-    if (existingUser) {
+    const existingPhoneNumber = await User.findOne({ where: { phone_number } })
+    if (existingPhoneNumber) {
         return res.status(400).json({ message: "Số điện thoại đã được sử dụng!" })
+    }
+    
+    const existingEmail = await User.findOne({ where: { email } })
+    if (existingEmail) {
+        return res.status(400).json({ message: "Email đã tồn tại!" })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)

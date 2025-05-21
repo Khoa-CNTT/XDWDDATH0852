@@ -19,6 +19,7 @@ const MenuItem = sequelize.define('MenuItem', {
   created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 }, {
   tableName: 'menu_items',
+  freezeTableName: true,
   timestamps: false,
 })
 

@@ -56,7 +56,7 @@
 
       <!-- Phần Instagram -->
       <div>
-        <h3 class="text-red-600 font-semibold mb-3">Theo dõi chúng tôi trên Instagram</h3>
+        <h3 class="text-red-600 font-semibold mb-3">Theo dõi chúng tôi trên website</h3>
         <div class="flex justify-center">
           <img src="https://i.pinimg.com/736x/33/5d/46/335d46cf0a99b7cf5850ee5623c6356f.jpg" alt="logo_foodshop"
             class="h-36 rounded-xl shadow-2xl object-cover mt-2" />

@@ -207,7 +207,8 @@
                 </div>
 
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Đã đặt hàng thành công!</h2>
-                <p class="text-gray-600 mb-6">Đơn hàng của bạn đã được đặt thành công. Bạn sẽ sớm nhận được email xác nhận.</p>
+                <p class="text-gray-600 mb-6">Đơn hàng của bạn đã được đặt thành công. Bạn sẽ sớm nhận được email xác
+                    nhận.</p>
 
                 <div class="bg-gray-50 rounded-lg p-4 mb-6">
                     <p class="text-gray-700 font-medium">Đơn hàng số</p>
@@ -304,8 +305,8 @@ const voucherDiscount = computed(() => {
     if (!voucherApplied.value || !appliedVoucher.value) return 0;
 
     const voucher = appliedVoucher.value;
-    if (voucher.discount_type === 'percentage') {
-        const discount = subtotal.value * (voucher.discount_value / 100);
+    if (voucher.discount_type === 'percent') {
+        const discount = subtotal.value * (parseFloat(voucher.discount_value) / 100);
         return voucher.max_discount ? Math.min(discount, voucher.max_discount) : discount;
     } else {
         return voucher.discount_value;
@@ -380,6 +381,7 @@ const placeOrder = async () => {
         };
 
         const orderResponse = await orderAPI.createOrder(orderData);
+        console.log('orderressponse123', orderResponse);
 
         if (orderResponse.data?.order) {
             const orderId = orderResponse.data.order.id;

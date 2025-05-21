@@ -219,7 +219,8 @@
                             class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 cursor-pointer">
                             Hủy
                         </button>
-                        <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 cursor-pointer">
+                        <button type="submit"
+                            class="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 cursor-pointer">
                             {{ showEditUserModal ? 'Cập nhật' : 'Thêm' }}
                         </button>
                     </div>
@@ -405,6 +406,11 @@ const toggleUserStatus = async (user) => {
 };
 
 const deleteUser = (id) => {
+    const user = users.value.find((u) => u.id === id);
+    if (user && user.role_name === 'admin') {
+        alert('Không thể xóa tài khoản Admin!');
+        return;
+    }
     userToDeleteId.value = id;
     showDeleteModal.value = true;
 };

@@ -3,18 +3,60 @@ import TryCatch from "../utils/trycatch.js"
 
 // Tạo đơn hàng
 export const createOrder = TryCatch(async (req, res) => {
-  const { user_Id, total_price, voucher_Id, status, payment_status } = req.body
+  const { user_Id, total_price, voucher_code, status, payment_status } = req.body;
 
-  const user = await User.findByPk(user_Id)
-  if (!user) return res.status(404).json({ message: "Người dùng không tồn tại!" })
+  // Kiểm tra user có tồn tại không
+  const user = await User.findByPk(user_Id);
+  if (!user) return res.status(404).json({ message: "Người dùng không tồn tại!" });
 
-  if (voucher_Id) {
-    const voucher = await Voucher.findByPk(voucher_Id)
-    if (!voucher) return res.status(404).json({ message: "Voucher không hợp lệ!" })
+  let voucher_Id = null;
+
+  // Nếu có voucher_code, kiểm tra voucher có tồn tại không
+  if (voucher_code) {
+    const voucher = await Voucher.findOne({ where: { code: voucher_code } });
+
+    if (!voucher) {
+      return res.status(404).json({ message: "Voucher không hợp lệ!" });
+    }
+
+    // Kiểm tra hiệu lực
+    const now = new Date();
+    if (now < new Date(voucher.start_date) || now > new Date(voucher.end_date)) {
+      return res.status(400).json({ message: "Voucher đã hết hạn hoặc chưa có hiệu lực!" });
+    }
+
+    // Kiểm tra số lượt sử dụng
+    if (voucher.limit > 0) {
+      const usedCount = await Order.count({ where: { voucher_Id: voucher.id } });
+      if (usedCount >= voucher.limit) {
+        return res.status(400).json({ message: "Voucher đã hết lượt sử dụng!" });
+      }
+    }
+
+    // Kiểm tra đơn hàng tối thiểu
+    if (total_price < voucher.min_order_amount) {
+      return res.status(400).json({
+        message: `Đơn hàng không đạt giá trị tối thiểu để sử dụng voucher (${voucher.min_order_amount})`
+      });
+    }
+
+    voucher_Id = voucher.id;
   }
 
-  const order = await Order.create({ user_Id, total_price, voucher_Id, status, payment_status })
-  res.status(201).json({ message: "Tạo đơn hàng thành công!", order })
+  // Tạo đơn hàng
+  const order = await Order.create({
+    user_Id,
+    total_price,
+    voucher_Id,
+    status,
+    payment_status
+  });
+
+  res.status(201).json({
+    message: "Tạo đơn hàng thành công!",
+    order,
+    voucher_code: voucher_code || null
+  });
 })
 
 // Lấy danh sách đơn hàng

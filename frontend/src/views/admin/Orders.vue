@@ -33,6 +33,7 @@
                         <option value="processing">Đang xử lý</option>
                         <option value="shipped">Đã gửi hàng</option>
                         <option value="delivered">Đã giao hàng</option>
+                        <option value="confirmed">Đã xác nhận</option>
                         <option value="cancelled">Đã hủy</option>
                     </select>
                 </div>
@@ -95,12 +96,14 @@
                                         'bg-blue-100 text-blue-800 border-blue-200': order.status === 'processing',
                                         'bg-purple-100 text-purple-800 border-indigo-200': order.status === 'shipped',
                                         'bg-green-100 text-green-800 border-green-200': order.status === 'delivered',
+                                        'bg-green-200 text-green-800 border-green-200': order.status === 'confirmed',
                                         'bg-red-100 text-red-800 border-red-200': order.status === 'cancelled'
                                     }">
                                     <option value="pending">Chờ xử lý</option>
                                     <option value="processing">Đang xử lý</option>
                                     <option value="shipped">Đã gửi hàng</option>
                                     <option value="delivered">Đã giao hàng</option>
+                                    <option value="confirmed">Đã xác nhận</option>
                                     <option value="cancelled">Đã hủy</option>
                                 </select>
                             </td>
@@ -156,11 +159,14 @@
                     <p><b>Tổng tiền:</b> {{ typeof selectedOrder.total_price === 'string' ?
                         parseFloat(selectedOrder.total_price).toLocaleString('vi-VN') : 'N/A' }} VNĐ</p>
                     <p><b>Mã voucher:</b> {{ selectedOrder.Voucher ? selectedOrder.Voucher.code : 'N/A' }}</p>
-                    <p><b>Trạng thái:</b> {{ selectedOrder.status === 'pending' ? 'Đang chờ xử lý' : 
+                    <p><b>Trạng thái:</b> {{ 
+                        selectedOrder.status === 'pending' ? 'Đang chờ xử lý' : 
                         selectedOrder.status === 'processing' ? 'Đang xử lý' : 
                         selectedOrder.status === 'shipped' ? 'Đã gửi hàng' : 
                         selectedOrder.status === 'delivered' ? 'Đã giao hàng' : 
-                        selectedOrder.status === 'cancelled' ? 'Đã hủy' : selectedOrder.status }}</p>
+                        selectedOrder.status === 'confirmed' ? 'Đã xác nhận' : 
+                        selectedOrder.status === 'cancelled' ? 'Đã hủy' : selectedOrder.status 
+                    }}</p>
                     <p><b>Trạng thái thanh toán:</b> {{ selectedOrder.payment_status === 'paid' ? 'Đã thanh toán' : 'Đang chờ thanh toán' }}</p>
 
                     <h3 class="text-md font-bold mt-4">Đơn hàng:</h3>
@@ -205,6 +211,7 @@ const fetchOrders = async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_API_DOMAIN_SERVER}/api/orders/all`)
         orders.value = response.data
+        console.log('order', orders.value);
     } catch (error) {
         console.error('Error fetching orders:', error)
     }
@@ -304,8 +311,7 @@ const updateOrderStatus = async (orderId, status) => {
 
 // In đơn hàng
 const printOrder = (orderId) => {
-    console.log(`Printing order ${orderId}`)
-    alert(`Printing order #${orderId}`)
+    alert(`In đơn hàng #${orderId}`)
 }
 
 // Xuất đơn hàng

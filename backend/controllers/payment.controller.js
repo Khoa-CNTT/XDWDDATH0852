@@ -28,16 +28,20 @@ export const createPayment = TryCatch(async (req, res) => {
 
 // Lấy thông tin thanh toán theo order_Id
 export const getPaymentByOrderId = TryCatch(async (req, res) => {
-  const { orderId } = req.params
+  try {
+    const { orderId } = req.params;
 
-  const payment = await Payment.findOne({
-    where: { order_Id: orderId },
-    include: [{ model: Order, attributes: ["total_price", "status"] }],
-  })
+    const payment = await Payment.findOne({
+      where: { order_Id: orderId },
+      include: [{ model: Order, attributes: ["total_price", "status"] }],
+    });
 
-  if (!payment) return res.status(404).json({ message: "Không tìm thấy thông tin thanh toán!" })
+    if (!payment) return res.status(404).json({ message: "Không tìm thấy thông tin thanh toán!" });
 
-  res.json(payment)
+    res.json(payment);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server!", error });
+  }
 })
 
 // Cập nhật trạng thái thanh toán
@@ -66,70 +70,61 @@ export const deletePayment = TryCatch(async (req, res) => {
 })
 
 
+const vnpayConfig = {
+  vnp_TmnCode: '6DQ11GO2',
+  vnp_HashSecret: '93NR9GHZAQ92R9X5QVQ23DJSFW7X9ROK',
+  vnp_Url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+  vnp_Api: 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction',
+  vnp_ReturnUrl: 'http://localhost:5173/orders',
+  vnp_OrderType: 'other',
+};
 
 // Khởi tạo thanh toán VNPAY
 export const initiateVNPAYPayment = TryCatch(async (req, res) => {
-  console.log('------------------ INITIATE VNPAY PAYMENT ------------------')
-  const vnpayConfig = {
-    vnp_TmnCode: '6DQ11GO2',
-    vnp_HashSecret: '93NR9GHZAQ92R9X5QVQ23DJSFW7X9ROK',
-    vnp_Url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
-    vnp_Api: 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction',
-    vnp_ReturnUrl: 'http://localhost:5173/orders',
-    vnp_OrderType: 'other',
-  };
-  
-  const { orderId, amount, orderInfo, returnUrl, currency = 'VND' } = req.body
+  console.log('------------------ INITIATE VNPAY PAYMENT ------------------');
+
+  const { orderId, amount, orderInfo, returnUrl, currency = 'VND' } = req.body;
 
   // Validate input
   if (!orderId || !amount || isNaN(amount) || amount <= 0) {
     return res.status(400).json({
       code: '01',
       message: 'Thông tin thanh toán không hợp lệ!'
-    })
+    });
   }
 
-  const Order = {
-    findByPk: async (id) => {
-      if (id === orderId) {
-        return { id: orderId, user_Id: 'user123' }
-      }
-      return null
-    }
-  }
-
-  const order = await Order.findByPk(orderId)
+  const order = await Order.findByPk(orderId);
   if (!order) {
     return res.status(404).json({
       code: '02',
       message: 'Đơn hàng không tồn tại!'
-    })
+    });
   }
 
   // Get IP address
   const ipAddr = req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress
+    req.connection.socket.remoteAddress;
 
   // Format date
-  const createDate = moment().format('YYYYMMDDHHmmss')
+  const createDate = moment().format('YYYYMMDDHHmmss');
 
   // Process amount
-  let amountVND = Math.round(Number(amount))
+  let amountVND = Math.round(Number(amount));
   if (currency === 'USD') {
-    const exchangeRate = 24500
-    amountVND = Math.round(amount * exchangeRate)
+    const exchangeRate = 24500;
+    amountVND = Math.round(amount * exchangeRate);
   }
 
   if (amountVND < 1000) {
     return res.status(400).json({
       code: '03',
       message: 'Số tiền thanh toán tối thiểu là 1,000 VND'
-    })
+    });
   }
 
-  // Create VNPay params - THÊM vnp_ExpireDate
+  // Create VNPay params
   const vnpParams = {
     vnp_Version: '2.1.0',
     vnp_Command: 'pay',
@@ -143,71 +138,70 @@ export const initiateVNPAYPayment = TryCatch(async (req, res) => {
     vnp_ReturnUrl: returnUrl || vnpayConfig.vnp_ReturnUrl,
     vnp_IpAddr: ipAddr.split(',')[0].trim(),
     vnp_CreateDate: createDate,
-    vnp_ExpireDate: moment().add(15, 'minutes').format('YYYYMMDDHHmmss') // Thêm thời hạn thanh toán
-  }
-
-  // console.log('Params before hash:', JSON.stringify(vnpParams, null, 2))
+    vnp_ExpireDate: moment().add(15, 'minutes').format('YYYYMMDDHHmmss')
+  };
 
   // Sort params alphabetically
   const sortedParams = Object.keys(vnpParams).sort().reduce((acc, key) => {
     if (vnpParams[key] !== undefined && vnpParams[key] !== null && vnpParams[key] !== '') {
-      acc[key] = vnpParams[key]
+      acc[key] = vnpParams[key];
     }
-    return acc
-  }, {})
+    return acc;
+  }, {});
 
-  // Tạo chuỗi dữ liệu ký - SỬA LẠI CÁCH ENCODE
+  // Create sign data
   const signData = Object.keys(sortedParams)
     .map(key => `${key}=${encodeURIComponent(sortedParams[key])}`)
-    .join('&')
+    .join('&');
 
-  // console.log('Data to hash:', signData)
+  // Create secure hash
+  const hmac = crypto.createHmac('sha512', vnpayConfig.vnp_HashSecret.trim());
+  const secureHash = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
 
-  // Tạo secure hash - THÊM BUFFER VÀ TRIM() HASH SECRET
-  const hmac = crypto.createHmac('sha512', vnpayConfig.vnp_HashSecret.trim())
-  const secureHash = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex')
-  // console.log('Generated hash:', secureHash)
-
-  // Thêm chữ ký vào params
+  // Add secure hash to params
   const paymentParams = {
     ...sortedParams,
     vnp_SecureHash: secureHash
-  }
+  };
 
-  // Tạo URL thanh toán - SỬA LẠI CÁCH ENCODE URL
-  const paymentUrl = `${vnpayConfig.vnp_Url}?${qs.stringify(paymentParams, { encode: true })}`
-  // console.log('Generated payment URL:', paymentUrl)
+  // Create payment URL
+  const paymentUrl = `${vnpayConfig.vnp_Url}?${qs.stringify(paymentParams, { encode: true })}`;
 
-  const Payment = {
-    create: async (data) => {
-      return { id: Math.random().toString(36).substring(7), ...data }
-    }
-  }
-
+  // Create payment record using the real model
   const paymentRecord = await Payment.create({
     order_Id: orderId,
     user_Id: order.user_Id,
     total_payment: amountVND,
-    method: 'VNPAY',
+    method: 'vnpay', // Lưu bằng chữ thường để nhất quán
     status: 'pending',
     transaction_id: null,
     currency: currency,
     vnp_RequestId: `${orderId}_${Date.now()}`,
     vnp_Amount: amountVND * 100,
-  })
+  });
+
+  // Kiểm tra xem bản ghi có được tạo thành công không
+  if (!paymentRecord) {
+    return res.status(500).json({
+      code: '04',
+      message: 'Không thể tạo bản ghi thanh toán!'
+    });
+  }
 
   return res.status(200).json({
     code: '00',
     message: 'Khởi tạo thanh toán thành công',
     data: paymentUrl,
     paymentId: paymentRecord.id
-  })
-})
+  });
+});
 
 // Xử lý return từ VNPAY
 export const vnpayReturn = TryCatch(async (req, res) => {
   const vnpParams = { ...req.query }
+  console.log('vnpParams', vnpParams);
   const secureHash = vnpParams.vnp_SecureHash
+  console.log('secureHash', secureHash);
 
   // Xóa các tham số không cần thiết để kiểm tra chữ ký
   delete vnpParams.vnp_SecureHash
@@ -254,10 +248,14 @@ export const vnpayReturn = TryCatch(async (req, res) => {
     })
 
     // Cập nhật trạng thái đơn hàng nếu cần
-    await Order.update(
-      { payment_status: 'paid' },
+    const updatedOrder = await Order.update(
+      {
+        status: 'success',
+        payment_status: 'paid'
+      },
       { where: { id: orderId } }
     )
+    console.log('Order updated:', updatedOrder);
 
     return res.status(200).json({
       code: '00',

@@ -105,7 +105,7 @@
 
       <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="p-4 border-b">
-          <h2 class="text-lg font-semibold">Top sản phẩm</h2>
+          <h2 class="text-lg font-semibold">Các sản phẩm</h2>
         </div>
 
         <ul class="divide-y divide-gray-200">
@@ -116,10 +116,6 @@
                 <h3 class="text-sm font-medium text-gray-900">{{ product.name }}</h3>
                 <p class="text-sm text-gray-500">{{ product.price.toLocaleString('vi-VN') }} VNĐ</p>
               </div>
-              <!-- <div class="text-right">
-                <p class="text-sm font-medium text-gray-900">{{ product.sales }} lượt bán</p>
-                <p class="text-xs text-gray-500">{{ product.revenue }}</p>
-              </div> -->
             </div>
           </li>
         </ul>
@@ -195,6 +191,7 @@ const translateStatus = (status) => {
     processing: { text: 'Đang xử lý', color: 'bg-blue-100 text-blue-800' },
     shipped: { text: 'Đã gửi hàng', color: 'bg-purple-100 text-purple-800' },
     delivered: { text: 'Đã giao hàng', color: 'bg-green-100 text-green-800' },
+    confirmed: { text: 'Đã xác nhận', color: 'bg-green-200 text-green-800' },
     cancelled: { text: 'Đã hủy', color: 'bg-red-100 text-red-800' },
   };
 

@@ -70,7 +70,7 @@ export const checkVoucher = TryCatch(async (req, res) => {
     if (total_price < voucher.min_order_amount) {
         return res.json({
             valid: false,
-            message: `Đơn hàng phải có giá trị tối thiểu ${voucher.min_order_amount} VNĐ`
+            message: `Đơn hàng phải có giá trị tối thiểu ${Number(voucher.min_order_amount).toLocaleString('vi-VN')} VNĐ`
         });
     }
 
