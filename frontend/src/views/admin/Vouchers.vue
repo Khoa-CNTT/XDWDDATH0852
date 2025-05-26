@@ -96,8 +96,8 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div><b>From:</b>  {{ formatDate(voucher.startDate) }}</div>
-                                <div><b>To:</b> {{ formatDate(voucher.endDate) }}</div>
+                                <div><b>Từ:</b>  {{ formatDate(voucher.startDate) }}</div>
+                                <div><b>Đến:</b> {{ formatDate(voucher.endDate) }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <div>{{ voucher.usedCount }} / {{ voucher.maxUses === 0 ? '∞' : voucher.maxUses }}</div>
@@ -112,7 +112,7 @@
                                     'bg-red-100 text-red-800': voucher.status === 'inactive',
                                     'bg-gray-100 text-gray-800': voucher.status === 'expired',
                                 }">
-                                    {{ voucher.status.charAt(0).toUpperCase() + voucher.status.slice(1) }}
+                                    {{ statusText[voucher.status] || 'Không xác định' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -249,9 +249,9 @@
                     <div class="mb-4">
                         <div class="flex items-center">
                             <input type="checkbox" id="voucherStatus" v-model="currentVoucher.isActive"
-                                class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
-                            <label for="voucherStatus" class="ml-2 block text-sm text-gray-700">
-                                Active
+                                class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded cursor-pointer" />
+                            <label for="voucherStatus" class="ml-2 block text-sm text-gray-700 cursor-pointer">
+                                Hoạt động
                             </label>
                         </div>
                     </div>
@@ -399,8 +399,11 @@ const filteredVouchers = computed(() => {
 
 // Methods
 const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
 };
 
 const resetCurrentVoucher = () => {
@@ -583,6 +586,12 @@ const confirmDelete = async () => {
         voucherToDeleteId.value = null;
         isLoading.value = false;
     }
+};
+
+const statusText = {
+  active: 'Đang hoạt động',
+  inactive: 'Không hoạt động',
+  expired: 'Hết hạn',
 };
 
 // Fetch vouchers when component mounts

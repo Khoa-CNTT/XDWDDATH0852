@@ -87,7 +87,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ typeof order.total_price === 'string' ?
                                     parseFloat(order.total_price).toLocaleString('vi-VN') :
-                                'N/A' }} VNĐ
+                                    'N/A' }} VNĐ
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <select v-model="order.status" @change="updateOrderStatus(order.id, order.status)"
@@ -115,10 +115,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <button @click="viewOrderDetails(order)"
-                                    class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    class="text-indigo-600 hover:text-indigo-900 mr-3 cursor-pointer">
                                     <i class="bx bx-show text-xl"></i>
                                 </button>
-                                <button @click="printOrder(order.id)" class="text-gray-600 hover:text-gray-900">
+                                <button @click="printOrder(order.id)"
+                                    class="text-gray-600 hover:text-gray-900 cursor-pointer">
                                     <i class="bx bx-printer text-xl"></i>
                                 </button>
                             </td>
@@ -130,12 +131,14 @@
             <div v-if="filteredOrders.length === 0" class="text-center py-12">
                 <i class="bx bx-shopping-bag text-6xl text-gray-400 mb-4"></i>
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">Không tìm thấy đơn hàng nào</h3>
-                <p class="text-gray-500">Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm kiếm.</p>
+                <p class="text-gray-500">Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn để tìm những gì bạn đang tìm
+                    kiếm.</p>
             </div>
         </div>
 
         <div class="flex justify-center mt-4 gap-2" v-if="filteredOrders.length > itemsPerPage">
-            <button @click="currentPage--" :disabled="currentPage === 1" class="px-4 py-2 mx-1 bg-gray-200 hover:bg-gray-300 duration-200 rounded-md cursor-pointer">
+            <button @click="currentPage--" :disabled="currentPage === 1"
+                class="px-4 py-2 mx-1 bg-gray-200 hover:bg-gray-300 duration-200 rounded-md cursor-pointer">
                 Trước
             </button>
             <button @click="currentPage++" :disabled="currentPage * itemsPerPage >= filteredOrders.length"
@@ -159,22 +162,24 @@
                     <p><b>Tổng tiền:</b> {{ typeof selectedOrder.total_price === 'string' ?
                         parseFloat(selectedOrder.total_price).toLocaleString('vi-VN') : 'N/A' }} VNĐ</p>
                     <p><b>Mã voucher:</b> {{ selectedOrder.Voucher ? selectedOrder.Voucher.code : 'N/A' }}</p>
-                    <p><b>Trạng thái:</b> {{ 
-                        selectedOrder.status === 'pending' ? 'Đang chờ xử lý' : 
-                        selectedOrder.status === 'processing' ? 'Đang xử lý' : 
-                        selectedOrder.status === 'shipped' ? 'Đã gửi hàng' : 
-                        selectedOrder.status === 'delivered' ? 'Đã giao hàng' : 
-                        selectedOrder.status === 'confirmed' ? 'Đã xác nhận' : 
-                        selectedOrder.status === 'cancelled' ? 'Đã hủy' : selectedOrder.status 
+                    <p><b>Trạng thái:</b> {{
+                        selectedOrder.status === 'pending' ? 'Đang chờ xử lý' :
+                            selectedOrder.status === 'processing' ? 'Đang xử lý' :
+                                selectedOrder.status === 'shipped' ? 'Đã gửi hàng' :
+                                    selectedOrder.status === 'delivered' ? 'Đã giao hàng' :
+                                        selectedOrder.status === 'confirmed' ? 'Đã xác nhận' :
+                                            selectedOrder.status === 'cancelled' ? 'Đã hủy' : selectedOrder.status
                     }}</p>
-                    <p><b>Trạng thái thanh toán:</b> {{ selectedOrder.payment_status === 'paid' ? 'Đã thanh toán' : 'Đang chờ thanh toán' }}</p>
+                    <p><b>Trạng thái thanh toán:</b> {{ selectedOrder.payment_status === 'paid' ? 'Đã thanh toán' :
+                        'Đang chờ thanh toán' }}</p>
 
                     <h3 class="text-md font-bold mt-4">Đơn hàng:</h3>
                     <ul v-if="orderDetails && orderDetails.length > 0" class="mt-2 space-y-2">
                         <li v-for="item in orderDetails" :key="item.id" class="flex items-center justify-between">
                             <span>{{ item.MenuItem.name }}</span>
                             <span class="text-gray-600">x {{ item.quantity }}</span>
-                            <span class="font-semibold">{{ parseFloat(item.subtotal).toLocaleString('vi-VN') }} VNĐ</span>
+                            <span class="font-semibold">{{ parseFloat(item.subtotal).toLocaleString('vi-VN') }}
+                                VNĐ</span>
                         </li>
                     </ul>
                     <p v-else class="text-gray-500 mt-2">No items in this order.</p>
@@ -204,7 +209,7 @@ const selectedOrder = ref({})
 const orders = ref([])
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
-const orderDetails = ref([]) 
+const orderDetails = ref([])
 
 // lấy danh sách đơn hàng
 const fetchOrders = async () => {
@@ -297,18 +302,24 @@ const viewOrderDetails = (order) => {
 // Cập nhật trạng thái đơn hàng
 const updateOrderStatus = async (orderId, status) => {
     try {
-        await axios.put(`${import.meta.env.VITE_API_DOMAIN_SERVER}/api/orders/update/${orderId}`, {
-            status: status,
-        })
-        fetchOrders()
+        let updatedData = { status: status };
+        if (status === 'confirmed') {
+            updatedData.payment_status = 'paid';
+        } else {
+            updatedData.payment_status = 'unpaid';
+        }
+        await axios.put(`${import.meta.env.VITE_API_DOMAIN_SERVER}/api/orders/update/${orderId}`, updatedData);
+        fetchOrders();
         if (selectedOrder.value.id === orderId) {
-            selectedOrder.value.status = status
+            selectedOrder.value.status = status;
+            if (status === 'confirmed') {
+                selectedOrder.value.payment_status = 'paid';
+            }
         }
     } catch (error) {
-        console.error('Error updating order status:', error)
+        console.error('Error updating order status:', error);
     }
-}
-
+};
 // In đơn hàng
 const printOrder = (orderId) => {
     alert(`In đơn hàng #${orderId}`)

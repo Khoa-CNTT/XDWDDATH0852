@@ -93,8 +93,8 @@
         </div>
 
         <div v-else class="text-center py-12 bg-gradient-to-br from-white via-rose-100 to-white rounded-xl shadow-lg">
-            <div class="animate-bounce mb-4">
-                <i class='bx bx-cart-alt h-20 w-20 mx-auto text-rose-300'></i>
+            <div class="mb-4">
+                <i class='bx bx-cart-alt mx-auto text-rose-400 text-5xl'></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">Ôi không! Giỏ hàng trống</h3>
             <p class="text-gray-600 mb-6">Bạn chưa thêm sản phẩm nào vào giỏ hàng. Hãy khám phá những món ngon nhé!</p>
@@ -107,7 +107,7 @@
         <!-- Modal xác nhận số lượng lớn -->
         <div v-if="showConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-                <h2 class="text-lg font-semibold mb-4">Xác nhận số lượng lớn</h2>
+                <h2 class="text-lg font-semibold mb-4">Xác nhận số lượng lớn ?</h2>
                 <p class="text-gray-600 mb-6">
                     Bạn đang đặt {{ totalItems }} món. Đây là số lượng lớn. Bạn có chắc chắn muốn tiếp tục không?
                 </p>
@@ -214,7 +214,8 @@ const cancelUpdate = () => {
     if (pendingUpdate.value) {
         const item = cartItems.value.find(item => item.id === pendingUpdate.value.id);
         if (item) {
-            item.quantity = cartItems.value.find(item => item.id === pendingUpdate.value.id).quantity; // Khôi phục số lượng cũ
+            item.quantity = 1;
+            updateQuantity(item.id, 1);
         }
         showConfirmModal.value = false;
         pendingUpdate.value = null;

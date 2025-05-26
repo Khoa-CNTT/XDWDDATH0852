@@ -39,7 +39,7 @@
       <h2 class="text-2xl font-bold text-gray-700 mb-2">Không có đơn hàng tìm thấy</h2>
       <p v-if="statusFilter !== 'all'" class="text-gray-500 mb-4">Hãy thử thay đổi bộ lọc của bạn hoặc kiểm tra lại sau.
       </p>
-      <p v-else class="text-gray-500 mb-4">You haven't placed any orders yet.</p>
+      <p v-else class="text-gray-500 mb-4">Bạn chưa đặt bất kỳ đơn hàng nào.</p>
       <router-link to="/menu"
         class="bg-rose-500 hover:bg-rose-600 text-white font-medium px-6 py-2 rounded-md transition cursor-pointer">
         Shop Now
@@ -342,6 +342,7 @@ const fetchOrders = async () => {
     loading.value = true;
     error.value = null;
     const response = await orderAPI.getOrderByUserID(user.id);
+    console.log('response123', response);
 
     if (response && Array.isArray(response)) {
       orders.value = response;
@@ -365,15 +366,15 @@ const fetchOrders = async () => {
           const paymentResponse = await paymentAPI.getPaymentByOrderId(order.id);
           if (paymentResponse && paymentResponse.data) {
             order.payment_method = paymentResponse.data.method || 'Không xác định';
-            order.payment_status = paymentResponse.data.status || 'pending';
+            order.payment_status = paymentResponse.data.status || 'Đã xác định';
           } else {
             order.payment_method = 'Không xác định';
-            order.payment_status = 'pending';
+            order.payment_status = 'Đã xác định';
           }
         } catch (paymentError) {
           console.error('Error fetching payment info for order', order.id, paymentError);
           order.payment_method = 'Không xác định';
-          order.payment_status = 'pending';
+          order.payment_status = 'Đã xác định';
         }
 
         // Fetch full order details
@@ -492,6 +493,8 @@ const translateStatus = (status) => {
     case 'pending':
       return 'Đang chờ';
     case 'confirmed':
+      return 'Đã xác nhận';
+    case 'success':
       return 'Đã xác nhận';
     case 'processing':
       return 'Đang xử lý';
@@ -626,14 +629,15 @@ const submitReview = async () => {
   }
 };
 
-// Run on component mount
 onMounted(() => {
   fetchOrders();
   if (route.query.vnp_TransactionStatus === '00') {
     alert('Thanh toán thành công!');
+    fetchOrders();
   } else if (route.query.vnp_TransactionStatus) {
     alert('Thanh toán không thành công hoặc bị hủy.');
     console.log('Payment Return Query:', route.query);
   }
 });
 </script>
+

@@ -70,13 +70,13 @@
 <script setup>
 import { onMounted } from 'vue';
 
-// Chatbot AI
+// Chatbot AI Preny
 onMounted(() => {
   const script = document.createElement('script');
   script.src = 'https://app.preny.ai/embed-global.js'; // Link đến file nhúng của chatbot Preny
   script.async = true;  // Tải script bất đồng bộ, không chặn các thao tác khác
   script.defer = true;  // Trì hoãn thực thi script cho đến khi HTML được phân tích xong
-  script.dataset.prenyBotId = '68221c3b63c96f4aed5b920e'; // ID bot riêng của bạn để kết nối đúng chatbot
+  script.dataset.prenyBotId = '683438ce74eba92b8ecf10b0'; // ID bot riêng của bạn để kết nối đúng chatbot
   script.dataset.buttonStyle = `
     width:70px;
     height:70px;

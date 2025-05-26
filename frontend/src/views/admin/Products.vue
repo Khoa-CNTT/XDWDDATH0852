@@ -84,7 +84,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                     :class="product.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-                                    {{ product.status }}
+                                    {{ product.status === 'available' ? 'Có sẵn' : 'Không có sẵn' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -166,8 +166,8 @@
                         <select id="productStatus" v-model="currentProduct.status"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 border-gray-300"
                             required>
-                            <option value="available">available</option>
-                            <option value="unavailable">unavailable</option>
+                            <option value="available">Có sẵn</option>
+                            <option value="unavailable">Không có sẵn</option>
                         </select>
                     </div>
 

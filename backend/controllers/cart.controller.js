@@ -58,8 +58,7 @@ export const addToCart = TryCatch(async (req, res) => {
                 details: { userId, menuItemId, quantity }
             });
         }
-
-        console.log('Adding to cart:', { userId, menuItemId, quantity });
+        // console.log('Adding to cart:', { userId, menuItemId, quantity });
 
         // Bắt đầu transaction
         transaction = await sequelize.transaction();
@@ -71,7 +70,7 @@ export const addToCart = TryCatch(async (req, res) => {
         });
 
         if (!cart) {
-            console.log('Creating new cart for user:', userId);
+            // console.log('Creating new cart for user:', userId);
             cart = await Cart.create({
                 user_id: userId,
                 items: [],
@@ -87,7 +86,7 @@ export const addToCart = TryCatch(async (req, res) => {
             return res.status(404).json({ message: "Sản phẩm không tồn tại!" });
         }
 
-        console.log('Found menu item:', menuItem.toJSON());
+        // console.log('Found menu item:', menuItem.toJSON());
 
         // Lấy danh sách sản phẩm hiện tại trong giỏ hàng
         const items = cart.items || [];
@@ -97,11 +96,11 @@ export const addToCart = TryCatch(async (req, res) => {
 
         if (existingItemIndex >= 0) {
             // Cập nhật số lượng nếu đã có
-            console.log('Updating existing cart item');
+            // console.log('Updating existing cart item');
             items[existingItemIndex].quantity += Number(quantity);
         } else {
             // Thêm mới sản phẩm vào giỏ hàng
-            console.log('Adding new item to cart');
+            // console.log('Adding new item to cart');
             items.push({
                 menu_item_id: menuItemId,
                 quantity: Number(quantity),
@@ -147,7 +146,7 @@ export const addToCart = TryCatch(async (req, res) => {
         cartData.items = itemsWithDetails;
         cartData.total = Number(cartData.total);
 
-        console.log('Final cart:', cartData);
+        // console.log('Final cart:', cartData);
         res.json(cartData);
     } catch (error) {
         // Rollback transaction nếu có lỗi

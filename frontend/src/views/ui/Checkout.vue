@@ -371,7 +371,7 @@ const placeOrder = async () => {
             user_Id: user.value.id,
             total_price: total.value,
             status: 'pending',
-            payment_status: form.value.paymentMethod === 'vnpay' ? 'pending' : 'pending',
+            payment_status: form.value.paymentMethod === 'vnpay' ? 'confirmed' : 'pending',
             shipping_address: form.value.address,
             full_name: form.value.fullName,
             phone_number: form.value.phone,

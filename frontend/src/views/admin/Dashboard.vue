@@ -151,7 +151,7 @@ onMounted(async () => {
     // Tính tổng doanh thu từ các đơn hàng đã thanh toán
     const revenue = orders.reduce((sum, order) => {
       if (order.payment_status === 'paid') {
-        return sum + (order.total_price || 0);
+        return sum + (Number(order.total_price) || 0);
       }
       return sum;
     }, 0);

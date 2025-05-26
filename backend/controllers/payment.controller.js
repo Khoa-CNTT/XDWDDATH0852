@@ -50,7 +50,6 @@ export const updatePayment = TryCatch(async (req, res) => {
   const { status, transaction_id } = req.body
 
   const payment = await Payment.findByPk(id)
-  console.log('payment', payment)
   if (!payment) return res.status(404).json({ message: "Thông tin thanh toán không tồn tại!" })
 
   await payment.update({ status, transaction_id })
@@ -75,7 +74,7 @@ const vnpayConfig = {
   vnp_HashSecret: '93NR9GHZAQ92R9X5QVQ23DJSFW7X9ROK',
   vnp_Url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
   vnp_Api: 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction',
-  vnp_ReturnUrl: 'http://localhost:5173/orders',
+  vnp_ReturnUrl: 'http://localhost:5000/api/payment/vnpay_return',
   vnp_OrderType: 'other',
 };
 
@@ -198,79 +197,75 @@ export const initiateVNPAYPayment = TryCatch(async (req, res) => {
 
 // Xử lý return từ VNPAY
 export const vnpayReturn = TryCatch(async (req, res) => {
-  const vnpParams = { ...req.query }
-  console.log('vnpParams', vnpParams);
-  const secureHash = vnpParams.vnp_SecureHash
-  console.log('secureHash', secureHash);
+  console.log('--- VNPay redirect received ---');
+  console.log('Query params:', req.query);
+  const vnpParams = { ...req.query };
+  const secureHash = vnpParams.vnp_SecureHash;
 
-  // Xóa các tham số không cần thiết để kiểm tra chữ ký
-  delete vnpParams.vnp_SecureHash
-  delete vnpParams.vnp_SecureHashType
+  delete vnpParams.vnp_SecureHash;
+  delete vnpParams.vnp_SecureHashType;
 
-  // Sắp xếp lại params theo thứ tự
   const sortedParams = Object.keys(vnpParams).sort().reduce((acc, key) => {
-    acc[key] = vnpParams[key]
-    return acc
-  }, {})
+    acc[key] = vnpParams[key];
+    return acc;
+  }, {});
 
-  // Tạo chữ ký để kiểm tra
-  const signData = qs.stringify(sortedParams, { encode: false })
+  const signData = qs.stringify(sortedParams, { encode: false });
   const checkHash = crypto
     .createHmac('sha512', vnpayConfig.vnp_HashSecret)
     .update(signData)
-    .digest('hex')
+    .digest('hex');
 
-  // Kiểm tra chữ ký
   if (secureHash !== checkHash) {
+    console.log('Invalid signature');
     return res.status(400).json({
       code: '97',
       message: 'Chữ ký không hợp lệ!'
-    })
+    });
   }
 
-  const orderId = vnpParams.vnp_TxnRef
-  const payment = await Payment.findOne({ where: { order_Id: orderId } })
-
+  const orderId = vnpParams.vnp_TxnRef;
+  const payment = await Payment.findOne({ where: { order_Id: orderId } });
   if (!payment) {
+    console.log('Payment not found for order:', orderId);
     return res.status(404).json({
       code: '01',
       message: 'Không tìm thấy thanh toán!'
-    })
+    });
   }
 
-  // Xử lý kết quả thanh toán
   if (vnpParams.vnp_ResponseCode === '00' && vnpParams.vnp_TransactionStatus === '00') {
-    await payment.update({
+    // Cập nhật Payment
+    const updatedPayment = await payment.update({
       status: 'success',
       transaction_id: vnpParams.vnp_TransactionNo,
       bank_code: vnpParams.vnp_BankCode,
       pay_date: vnpParams.vnp_PayDate ? moment(vnpParams.vnp_PayDate, 'YYYYMMDDHHmmss').toDate() : null
-    })
+    });
+    console.log('Payment updated:', updatedPayment);
 
-    // Cập nhật trạng thái đơn hàng nếu cần
+    // Cập nhật Order
     const updatedOrder = await Order.update(
       {
-        status: 'success',
-        payment_status: 'paid'
+        status: 'confirmed',
+        payment_status: 'paid',
       },
       { where: { id: orderId } }
-    )
-    console.log('Order updated:', updatedOrder);
+    );
+    console.log('Order update result:', updatedOrder);
 
-    return res.status(200).json({
-      code: '00',
-      message: 'Thanh toán thành công!'
-    })
+    // Kiểm tra xem Order có thực sự được cập nhật không
+    const orderAfterUpdate = await Order.findByPk(orderId);
+    console.log('Order after update:', orderAfterUpdate);
+
+    return res.redirect(`http://localhost:5173/orders?vnp_TransactionStatus=00`);
   } else {
-    await payment.update({
+    const updatedPayment = await payment.update({
       status: 'failed',
       error_code: vnpParams.vnp_ResponseCode,
       error_message: vnpParams.vnp_Message
-    })
-
-    return res.status(400).json({
-      code: vnpParams.vnp_ResponseCode || '99',
-      message: vnpParams.vnp_Message || 'Thanh toán thất bại!'
-    })
+    });
+    console.log('Payment failed:', updatedPayment);
+    return res.redirect(`http://localhost:5173/orders?vnp_TransactionStatus=${vnpParams.vnp_ResponseCode || '99'}`);
   }
 })
